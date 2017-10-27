@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="TestNode">
+      <UniqueIdentifier>{a30dc74a-ad26-486d-90e3-cfa59768f26f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AlphaPart">
+      <UniqueIdentifier>{9c10b311-52db-42c6-b2f9-451fed6687a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BetaPart">
+      <UniqueIdentifier>{98f16e84-07e6-4d19-9942-1d6315ddb2f3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Triples.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Field.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CStringOp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Condition.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Token.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AlphaMemory.cpp">
+      <Filter>AlphaPart</Filter>
+    </ClCompile>
+    <ClCompile Include="DummyTopNode.cpp">
+      <Filter>BetaPart</Filter>
+    </ClCompile>
+    <ClCompile Include="ReteNode.cpp">
+      <Filter>BetaPart</Filter>
+    </ClCompile>
+    <ClCompile Include="ProductionNode.cpp">
+      <Filter>BetaPart</Filter>
+    </ClCompile>
+    <ClCompile Include="Net.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ParamTestNode.cpp">
+      <Filter>TestNode</Filter>
+    </ClCompile>
+    <ClCompile Include="BetaNode.cpp">
+      <Filter>BetaPart</Filter>
+    </ClCompile>
+    <ClCompile Include="TestAtTokenFilterNode.cpp">
+      <Filter>TestNode</Filter>
+    </ClCompile>
+    <ClCompile Include="TokenFilterNode.cpp">
+      <Filter>BetaPart</Filter>
+    </ClCompile>
+    <ClCompile Include="JoinNode.cpp">
+      <Filter>BetaPart</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PrintableVector.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Triples.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Field.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PublicDefine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CStringOp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WME.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Condition.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Token.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AlphaMemory.h">
+      <Filter>AlphaPart</Filter>
+    </ClInclude>
+    <ClInclude Include="DummyTopNode.h">
+      <Filter>BetaPart</Filter>
+    </ClInclude>
+    <ClInclude Include="ReteNode.h">
+      <Filter>BetaPart</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ProductionNode.h">
+      <Filter>BetaPart</Filter>
+    </ClInclude>
+    <ClInclude Include="Net.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ParamTestNode.h">
+      <Filter>TestNode</Filter>
+    </ClInclude>
+    <ClInclude Include="BetaNode.h">
+      <Filter>BetaPart</Filter>
+    </ClInclude>
+    <ClInclude Include="TestAtTokenFilterNode.h">
+      <Filter>TestNode</Filter>
+    </ClInclude>
+    <ClInclude Include="TokenFilterNode.h">
+      <Filter>BetaPart</Filter>
+    </ClInclude>
+    <ClInclude Include="JoinNode.h">
+      <Filter>BetaPart</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
