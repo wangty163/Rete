@@ -33,6 +33,5 @@ void Condition::print(size_t level) const {
 }
 
 ConditionVector::ConditionVector(const std::initializer_list<Condition>& lst)
-	: PrintableVector<Condition>(lst) {
+	: std::vector<Condition>(lst) {
 }
-

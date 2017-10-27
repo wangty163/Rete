@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "Triples.h"
-#include "PrintableVector.h"
+//#include "PrintableVector.h"
 
 class Condition : public Triples {
 public:
@@ -23,9 +23,9 @@ protected:
 	Type type;
 };
 
-class ConditionVector : public PrintableVector<Condition> {
+class ConditionVector : public std::vector<Condition> {
 public:
-	ConditionVector(const std::initializer_list<Condition>& lst = {});
+	ConditionVector(const std::initializer_list<Condition>& lst);
 };
 
 namespace std {

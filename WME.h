@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Triples.h"
-#include "PrintableVector.h"
 #include "PublicDefine.h"
 
 class WME : public Triples {
@@ -10,7 +9,7 @@ public:
 	WME(const ID& id, const Attr& attr, const Value& value);
 };
 
-class WMEVector : public PrintableVector<WME> {
+class WMEVector : public std::vector<WME> {
 };
 
 template<typename ID, typename Attr, typename Value>

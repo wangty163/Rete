@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="AlphaMemory.cpp">
+      <Filter>AlphaPart</Filter>
+    </ClCompile>
+    <ClCompile Include="BetaNode.cpp">
+      <Filter>BetaPart</Filter>
+    </ClCompile>
+    <ClCompile Include="CStringOp.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="DummyTopNode.cpp">
+      <Filter>BetaPart</Filter>
+    </ClCompile>
+    <ClCompile Include="JoinNode.cpp">
+      <Filter>BetaPart</Filter>
+    </ClCompile>
+    <ClCompile Include="ParamTestNode.cpp">
+      <Filter>TestNode</Filter>
+    </ClCompile>
+    <ClCompile Include="ReteNode.cpp">
+      <Filter>BetaPart</Filter>
+    </ClCompile>
+    <ClCompile Include="TokenFilterNode.cpp">
+      <Filter>BetaPart</Filter>
+    </ClCompile>
+    <ClCompile Include="TestAtTokenFilterNode.cpp">
+      <Filter>TestNode</Filter>
+    </ClCompile>
+    <ClCompile Include="Field.cpp">
+      <Filter>Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="Condition.cpp">
+      <Filter>Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="Triples.cpp">
+      <Filter>Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="ProductionNode.cpp">
+      <Filter>BetaPart</Filter>
+    </ClCompile>
+    <ClCompile Include="Net.cpp">
+      <Filter>ReteNet</Filter>
+    </ClCompile>
+    <ClCompile Include="Token.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PublicDefine.h" />
+    <ClInclude Include="AlphaMemory.h">
+      <Filter>AlphaPart</Filter>
+    </ClInclude>
+    <ClInclude Include="BetaNode.h">
+      <Filter>BetaPart</Filter>
+    </ClInclude>
+    <ClInclude Include="CStringOp.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="DummyTopNode.h">
+      <Filter>BetaPart</Filter>
+    </ClInclude>
+    <ClInclude Include="JoinNode.h">
+      <Filter>BetaPart</Filter>
+    </ClInclude>
+    <ClInclude Include="ParamTestNode.h">
+      <Filter>TestNode</Filter>
+    </ClInclude>
+    <ClInclude Include="ReteNode.h">
+      <Filter>BetaPart</Filter>
+    </ClInclude>
+    <ClInclude Include="TokenFilterNode.h">
+      <Filter>BetaPart</Filter>
+    </ClInclude>
+    <ClInclude Include="TestAtTokenFilterNode.h">
+      <Filter>TestNode</Filter>
+    </ClInclude>
+    <ClInclude Include="Field.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Condition.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Token.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Triples.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="WME.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="ProductionNode.h">
+      <Filter>BetaPart</Filter>
+    </ClInclude>
+    <ClInclude Include="Net.h">
+      <Filter>ReteNet</Filter>
+    </ClInclude>
+    <ClInclude Include="VectorPrinter.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="AlphaPart">
+      <UniqueIdentifier>{e47d98b6-5ed3-498c-b636-5c4a7c43882f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BetaPart">
+      <UniqueIdentifier>{b8f1e796-4065-4bc2-8568-2f73140cdfc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{6dfb039e-8f73-4a77-b651-47c95c63984f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TestNode">
+      <UniqueIdentifier>{b23d4556-8100-4971-8e4e-158bcf9b253b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Structure">
+      <UniqueIdentifier>{3470e85c-63f3-4da5-9313-09c1beb41ff2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ReteNet">
+      <UniqueIdentifier>{9e354e69-1592-46a6-9a6e-a2ec662b8006}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

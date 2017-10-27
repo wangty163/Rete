@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Field.h"
+#include "CStringOp.h"
 
 class Triples
 {

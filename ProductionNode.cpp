@@ -1,6 +1,7 @@
 #include "ProductionNode.h"
 
 #include "ParamTestNode.h"
+#include "VectorPrinter.h"
 
 ProductionNode::ProductionNode(ReteNodePtr leftParent, const ConditionVector & conds)
 	: ReteNode(false), leftParent(leftParent), conds(conds) {
@@ -9,9 +10,9 @@ ProductionNode::ProductionNode(ReteNodePtr leftParent, const ConditionVector & c
 void ProductionNode::print(size_t level) const {
 	if (!output.empty()) {
 		std::cout << "matched productions:" << std::endl;
-		conds.print(level);
+		VectorPrinter::print(conds, level);
 		std::cout << "matched woking memory elements:" << std::endl;
-		output.print(level);
+		VectorPrinter::print(output, level);
 	}
 }
 

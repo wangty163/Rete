@@ -1,15 +1,11 @@
 #pragma once
 
 #include "WME.h"
-#include "PrintableVector.h"
 
-class Token : public PrintableVector<WME> {
+class Token : public std::vector<WME> {
 public:
-	Token(const std::initializer_list<WME>& lst);
+	void print(size_t level) const;
 };
 
-class TokenVector : public PrintableVector<Token> {
-public:
-	TokenVector();
-	TokenVector(const std::initializer_list<Token>& lst);
+class TokenVector : public std::vector<Token> {
 };

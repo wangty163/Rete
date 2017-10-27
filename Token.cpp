@@ -1,12 +1,7 @@
 #include "Token.h"
 
-Token::Token(const std::initializer_list<WME>& lst)
-	: PrintableVector<WME>(lst) {
-}
+#include "VectorPrinter.h"
 
-TokenVector::TokenVector() {
-}
-
-TokenVector::TokenVector(const std::initializer_list<Token>& lst)
-	: PrintableVector<Token>(lst) {
+void Token::print(size_t level) const {
+	VectorPrinter::print(*this, level);
 }

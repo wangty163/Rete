@@ -151,7 +151,7 @@
     <ClInclude Include="Net.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="JoinNode.h" />
-    <ClInclude Include="PrintableVector.h" />
+    <ClInclude Include="VectorPrinter.h" />
     <ClInclude Include="ProductionNode.h" />
     <ClInclude Include="PublicDefine.h" />
     <ClInclude Include="ReteNode.h" />
