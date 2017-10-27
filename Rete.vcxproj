@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{20FB3810-4050-46AD-9990-B93A264A8E53}</ProjectGuid>
+    <ProjectGuid>{5AFB40E3-173A-4B84-A810-559BFF44A691}</ProjectGuid>
     <RootNamespace>Project1</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     <ProjectName>Rete</ProjectName>
