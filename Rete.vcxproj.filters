@@ -44,10 +44,11 @@
     <ClCompile Include="Net.cpp">
       <Filter>ReteNet</Filter>
     </ClCompile>
-    <ClCompile Include="Token.cpp" />
+    <ClCompile Include="Token.cpp">
+      <Filter>Structure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PublicDefine.h" />
     <ClInclude Include="AlphaMemory.h">
       <Filter>AlphaPart</Filter>
     </ClInclude>
@@ -100,6 +101,9 @@
       <Filter>ReteNet</Filter>
     </ClInclude>
     <ClInclude Include="VectorPrinter.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="PublicDefine.h">
       <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
