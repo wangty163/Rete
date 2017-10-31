@@ -3,7 +3,7 @@
 #include <iterator>
 
 #include "ReteNode.h"
-#include "Condition.h"
+#include "../Structure/Condition.h"
 
 class ProductionNode : public ReteNode {
 	ReteNodePtr leftParent;

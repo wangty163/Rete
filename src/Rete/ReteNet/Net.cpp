@@ -1,8 +1,8 @@
 #include "Net.h"
 
-#include "JoinNode.h"
-#include "DummyTopNode.h"
-#include "TokenFilterNode.h"
+#include "../BetaPart/JoinNode.h"
+#include "../BetaPart/DummyTopNode.h"
+#include "../BetaPart/TokenFilterNode.h"
 
 ParamTestNodeVector Net::getTestsFromCondition(Condition c, const ConditionVector & condsHigherUp) {
 	ParamTestNodeVector ret;

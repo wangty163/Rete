@@ -1,6 +1,6 @@
 #include "Field.h"
 
-#include "PublicDefine.h"
+#include "../../PublicDefine.h"
 
 char Field::prefixChar = '$';
 

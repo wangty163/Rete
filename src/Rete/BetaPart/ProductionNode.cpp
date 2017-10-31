@@ -1,7 +1,7 @@
 #include "ProductionNode.h"
 
-#include "ParamTestNode.h"
-#include "VectorPrinter.h"
+#include "../TestNode/ParamTestNode.h"
+#include "../Utils/VectorPrinter.h"
 
 ProductionNode::ProductionNode(ReteNodePtr leftParent, const ConditionVector & conds, const std::string& comment)
 	: ReteNode(false), leftParent(leftParent), conds(conds), comment(comment) {

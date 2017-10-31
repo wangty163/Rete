@@ -18,6 +18,47 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Log.cpp" />
+    <ClCompile Include="src\Rete\AlphaPart\AlphaMemory.cpp" />
+    <ClCompile Include="src\Rete\BetaPart\BetaNode.cpp" />
+    <ClCompile Include="src\Rete\BetaPart\DummyTopNode.cpp" />
+    <ClCompile Include="src\Rete\BetaPart\JoinNode.cpp" />
+    <ClCompile Include="src\Rete\BetaPart\ProductionNode.cpp" />
+    <ClCompile Include="src\Rete\BetaPart\ReteNode.cpp" />
+    <ClCompile Include="src\Rete\BetaPart\TokenFilterNode.cpp" />
+    <ClCompile Include="src\Rete\main.cpp" />
+    <ClCompile Include="src\Rete\ReteNet\Net.cpp" />
+    <ClCompile Include="src\Rete\Structure\Condition.cpp" />
+    <ClCompile Include="src\Rete\Structure\Field.cpp" />
+    <ClCompile Include="src\Rete\Structure\Token.cpp" />
+    <ClCompile Include="src\Rete\Structure\Triples.cpp" />
+    <ClCompile Include="src\Rete\TestNode\ParamTestNode.cpp" />
+    <ClCompile Include="src\Rete\TestNode\TestAtTokenFilterNode.cpp" />
+    <ClCompile Include="src\StringOp.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Log.h" />
+    <ClInclude Include="src\PublicDefine.h" />
+    <ClInclude Include="src\Rete\AlphaPart\AlphaMemory.h" />
+    <ClInclude Include="src\Rete\BetaPart\BetaNode.h" />
+    <ClInclude Include="src\Rete\BetaPart\DummyTopNode.h" />
+    <ClInclude Include="src\Rete\BetaPart\JoinNode.h" />
+    <ClInclude Include="src\Rete\BetaPart\ProductionNode.h" />
+    <ClInclude Include="src\Rete\BetaPart\ReteNode.h" />
+    <ClInclude Include="src\Rete\BetaPart\TokenFilterNode.h" />
+    <ClInclude Include="src\Rete\ReteNet\Net.h" />
+    <ClInclude Include="src\Rete\Structure\Condition.h" />
+    <ClInclude Include="src\Rete\Structure\Field.h" />
+    <ClInclude Include="src\Rete\Structure\Node.h" />
+    <ClInclude Include="src\Rete\Structure\Token.h" />
+    <ClInclude Include="src\Rete\Structure\Triples.h" />
+    <ClInclude Include="src\Rete\Structure\WME.h" />
+    <ClInclude Include="src\Rete\TestNode\ParamTestNode.h" />
+    <ClInclude Include="src\Rete\TestNode\TestAtTokenFilterNode.h" />
+    <ClInclude Include="src\Rete\Utils\VectorPrinter.h" />
+    <ClInclude Include="src\StringOp.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5AFB40E3-173A-4B84-A810-559BFF44A691}</ProjectGuid>
     <RootNamespace>Project1</RootNamespace>
@@ -123,50 +164,6 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="AlphaMemory.cpp" />
-    <ClCompile Include="Condition.cpp" />
-    <ClCompile Include="DummyTopNode.cpp" />
-    <ClCompile Include="Field.cpp" />
-    <ClCompile Include="BetaNode.cpp" />
-    <ClCompile Include="Log.cpp" />
-    <ClCompile Include="Net.cpp" />
-    <ClCompile Include="JoinNode.cpp" />
-    <ClCompile Include="ProductionNode.cpp" />
-    <ClCompile Include="ReteNode.cpp" />
-    <ClCompile Include="ParamTestNode.cpp" />
-    <ClCompile Include="StringOp.cpp" />
-    <ClCompile Include="TestAtTokenFilterNode.cpp" />
-    <ClCompile Include="Token.cpp" />
-    <ClCompile Include="TokenFilterNode.cpp" />
-    <ClCompile Include="Triples.cpp" />
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="AlphaMemory.h" />
-    <ClInclude Include="Condition.h" />
-    <ClInclude Include="DummyTopNode.h" />
-    <ClInclude Include="Field.h" />
-    <ClInclude Include="BetaNode.h" />
-    <ClInclude Include="Log.h" />
-    <ClInclude Include="Net.h" />
-    <ClInclude Include="Node.h" />
-    <ClInclude Include="JoinNode.h" />
-    <ClInclude Include="StringOp.h" />
-    <ClInclude Include="VectorPrinter.h" />
-    <ClInclude Include="ProductionNode.h" />
-    <ClInclude Include="PublicDefine.h" />
-    <ClInclude Include="ReteNode.h" />
-    <ClInclude Include="ParamTestNode.h" />
-    <ClInclude Include="TestAtTokenFilterNode.h" />
-    <ClInclude Include="Token.h" />
-    <ClInclude Include="TokenFilterNode.h" />
-    <ClInclude Include="Triples.h" />
-    <ClInclude Include="WME.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="oov_pattern.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

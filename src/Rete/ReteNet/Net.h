@@ -4,13 +4,13 @@
 #include <unordered_set>
 #include <iterator>
 
-#include "PublicDefine.h"
-#include "TestAtTokenFilterNode.h"
-#include "ReteNode.h"
-#include "Condition.h"
-#include "AlphaMemory.h"
-#include "ProductionNode.h"
-#include "ParamTestNode.h"
+#include "../../PublicDefine.h"
+#include "../TestNode/TestAtTokenFilterNode.h"
+#include "../BetaPart/BetaNode.h"
+#include "../Structure/Condition.h"
+#include "../AlphaPart/AlphaMemory.h"
+#include "../BetaPart/ProductionNode.h"
+#include "../TestNode/ParamTestNode.h"
 
 struct StructForHash {
 	ReteNodePtr parent;

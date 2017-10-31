@@ -1,7 +1,7 @@
 #include "TestAtTokenFilterNode.h"
 
-#include "StringOp.h"
-#include "PublicDefine.h"
+#include "../../StringOp.h"
+#include "../../PublicDefine.h"
 
 bool TestAtTokenFilterNode::performTest(const Condition & c)
 {

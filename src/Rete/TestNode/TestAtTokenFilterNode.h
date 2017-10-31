@@ -4,7 +4,7 @@
 #include <string>
 #include <functional>
 
-#include "Condition.h"
+#include "../Structure/Condition.h"
 
 class TestAtTokenFilterNode {
 public:

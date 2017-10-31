@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ReteNode.h"
-#include "AlphaMemory.h"
-#include "ParamTestNode.h"
+#include "../AlphaPart/AlphaMemory.h"
+#include "../TestNode/ParamTestNode.h"
 
 class BetaNode : public ReteNode {
 protected:

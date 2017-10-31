@@ -1,7 +1,7 @@
 #include "TokenFilterNode.h"
 
-#include "TestAtTokenFilterNode.h"
-#include "PublicDefine.h"
+#include "../TestNode/TestAtTokenFilterNode.h"
+#include "../../PublicDefine.h"
 
 TokenFilterNode::TokenFilterNode(ReteNodePtr leftParent, AlphaMemoryPtr rightParent,
 	const ParamTestNodeVector & tests, const Condition& c, TestAtTokenFilterNode& testAtTokenFilterNode)

@@ -4,7 +4,7 @@
 #include <string>
 
 #include "Field.h"
-#include "StringOp.h"
+#include "../../StringOp.h"
 
 class Triples
 {

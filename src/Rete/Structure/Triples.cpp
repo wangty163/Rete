@@ -1,7 +1,7 @@
 #include "Triples.h"
 
-#include "PublicDefine.h"
-#include "StringOp.h"
+#include "../../PublicDefine.h"
+#include "../../StringOp.h"
 
 size_t Triples::getIndex(Field::Name fieldName) const
 {

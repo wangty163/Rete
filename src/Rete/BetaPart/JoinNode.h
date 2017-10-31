@@ -3,7 +3,7 @@
 #include <iterator>
 
 #include "BetaNode.h"
-#include "Condition.h"
+#include "../Structure/Condition.h"
 
 class JoinNode : public BetaNode {
 public:

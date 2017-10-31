@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "Node.h"
-#include "Token.h"
+#include "../Structure/Node.h"
+#include "../Structure/Token.h"
 
 class ReteNode : public Node<TokenVector> {
 protected:

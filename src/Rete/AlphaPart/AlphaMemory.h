@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "Node.h"
-#include "WME.h"
+#include "../Structure/Node.h"
+#include "../Structure/WME.h"
 
 class AlphaMemory : public Node<WMEVector> {
 public:

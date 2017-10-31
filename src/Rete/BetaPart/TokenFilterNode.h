@@ -1,7 +1,7 @@
 #pragma once
 
 #include "BetaNode.h"
-#include "TestAtTokenFilterNode.h"
+#include "../TestNode/TestAtTokenFilterNode.h"
 
 class TokenFilterNode : public BetaNode {
 public:

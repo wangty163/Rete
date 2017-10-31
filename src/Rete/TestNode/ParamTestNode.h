@@ -4,9 +4,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "Condition.h"
-#include "Token.h"
-#include "WME.h"
+#include "../Structure/Condition.h"
+#include "../Structure/Token.h"
+#include "../Structure/WME.h"
 
 struct ParamTestNode {
 	using ParamTestNodeVector = std::vector<ParamTestNode>;

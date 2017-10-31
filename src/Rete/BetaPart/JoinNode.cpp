@@ -1,6 +1,6 @@
 #include "JoinNode.h"
 
-#include "PublicDefine.h"
+#include "../../PublicDefine.h"
 
 JoinNode::JoinNode(ReteNodePtr leftParent, AlphaMemoryPtr rightParent
 	, const ParamTestNodeVector& tests, const Condition& c)

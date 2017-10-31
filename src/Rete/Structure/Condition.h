@@ -3,7 +3,6 @@
 #include <iostream>
 
 #include "Triples.h"
-//#include "PrintableVector.h"
 
 class Condition : public Triples {
 public:

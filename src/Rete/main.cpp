@@ -1,8 +1,9 @@
 #include <iostream>
 
-#include "Net.h"
-#include "TestAtTokenFilterNode.h"
-#include "Log.h"
+#include "ReteNet/Net.h"
+#include "TestNode/TestAtTokenFilterNode.h"
+#include "../Log.h"
+#include "../StringOp.h"
 
 using namespace std;
 

@@ -1,6 +1,6 @@
 #include "Condition.h"
 
-#include "StringOp.h"
+#include "../../StringOp.h"
 
 const std::string Condition::arbitraryString = "*"; 
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Triples.h"
-#include "PublicDefine.h"
+#include "../../PublicDefine.h"
 
 class WME : public Triples {
 public:

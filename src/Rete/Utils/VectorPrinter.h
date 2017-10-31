@@ -1,6 +1,6 @@
 #pragma once
 
-#include "StringOp.h"
+#include "../../StringOp.h"
 
 namespace VectorPrinter {
 	template<typename T>

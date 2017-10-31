@@ -1,6 +1,6 @@
 #include "ParamTestNode.h"
 
-#include "PublicDefine.h"
+#include "../../PublicDefine.h"
 
 ParamTestNode::ParamTestNode(Field::Name fieldOfArg1
 	, size_t conditionNumberOfArg2, Field::Name fieldOfArg2)

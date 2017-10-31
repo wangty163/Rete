@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "StringOp.h"
+#include "../../StringOp.h"
 
 namespace Field
 {
