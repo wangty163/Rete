@@ -10,5 +10,6 @@ void BetaNode::clearStatus() {
 		isReadyForOutput = false;
 		output.clear();
 		leftParent->clearStatus();
+		rightParent->clearStatus();
 	}
 }

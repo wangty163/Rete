@@ -7,3 +7,7 @@ void AlphaMemory::addWME(const WME & wme) {
 const WMEVector & AlphaMemory::getOutput() {
 	return output;
 }
+
+void AlphaMemory::clearStatus() {
+	output.clear();
+}

@@ -6,4 +6,5 @@ protected:
 	O output;
 public:
 	virtual const O& getOutput() = 0;
+	virtual void clearStatus() = 0;
 };

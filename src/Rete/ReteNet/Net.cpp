@@ -74,6 +74,9 @@ void Net::invoke() {
 		node->getOutput();
 		node->print();
 	}
+	for (auto&& node : resultNodes) {
+		node->clearStatus();
+	}
 }
 
 void Net::addWME(const WME & wme) {

@@ -10,7 +10,6 @@ protected:
 	bool isReadyForOutput;
 public:
 	ReteNode(bool isReadyForOutput);
-	virtual void clearStatus() = 0;
 };
 
 using ReteNodePtr = std::shared_ptr<ReteNode>;
