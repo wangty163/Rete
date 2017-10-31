@@ -2,14 +2,17 @@
 
 #include <unordered_map>
 #include <string>
+#include <functional>
 
 #include "Condition.h"
 
-namespace TestAtTokenFilterNode {
-	using JudgeFunctionType = bool(*)(const std::string&, const std::string&);
-
-	extern const std::unordered_map<std::string, JudgeFunctionType> dict;
-	
+class TestAtTokenFilterNode {
+public:
+	using JudgeFunctionType = std::function<double(const std::string&, const std::string&)>;
+	//using JudgeFunctionType = bool(*)(const std::string&, const std::string&);
 	bool performTest(const Condition& c);
 	bool isNeedFilterToken(const Condition& c);
+	void insertJudgeFunction(const std::string& key, JudgeFunctionType& value);
+private:
+	std::unordered_map<std::string, JudgeFunctionType> dict;
 };

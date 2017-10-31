@@ -4,7 +4,7 @@
 #include <string>
 
 #include "Field.h"
-#include "CStringOp.h"
+#include "StringOp.h"
 
 class Triples
 {
@@ -17,7 +17,7 @@ public:
 	void set(Field::Name fieldName, const std::string& v);
 	const std::string& get(Field::Name fieldName) const;
 	bool operator== (const Triples &rhs) const;
-	void print(size_t level) const;
+	void print(int level) const;
 };
 
 template<typename ID, typename Attr, typename Value>

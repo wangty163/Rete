@@ -1,19 +1,7 @@
 #include "TestAtTokenFilterNode.h"
 
-#include "CStringOp.h"
+#include "StringOp.h"
 #include "PublicDefine.h"
-
-using JudgeFunctionType = TestAtTokenFilterNode::JudgeFunctionType;
-const static std::unordered_map<std::string, JudgeFunctionType> TestAtTokenFilterNode::dict = {
-	{
-		"numeric-greater-than",
-		[](const std::string& left, const std::string& right) {
-			double leftValue = CStringOp::FromString<double>(left);
-			double rightValue = CStringOp::FromString<double>(right);
-			return leftValue > rightValue;
-		}
-	},
-};
 
 bool TestAtTokenFilterNode::performTest(const Condition & c)
 {
@@ -25,5 +13,15 @@ bool TestAtTokenFilterNode::performTest(const Condition & c)
 
 bool TestAtTokenFilterNode::isNeedFilterToken(const Condition & c)
 {
-	return dict.count(c.get(Field::attr)) > 0;
+	auto&& attr = c.get(Field::attr);
+	if (!attr.empty() && attr.at(0) != '.') {
+		myAssertPlus(dict.count(attr) > 0, attr);
+		return true;
+	}
+	return false;
+}
+
+void TestAtTokenFilterNode::insertJudgeFunction(const std::string & key, JudgeFunctionType & value) {
+	auto&& result = dict.insert(std::make_pair(key, value));
+	myAssertPlus(result.second, key);
 }

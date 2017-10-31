@@ -4,8 +4,8 @@
 #include "PublicDefine.h"
 
 TokenFilterNode::TokenFilterNode(ReteNodePtr leftParent, AlphaMemoryPtr rightParent,
-	const ParamTestNodeVector & tests, const Condition& c)
-	: BetaNode(leftParent, rightParent, tests), c(c) {
+	const ParamTestNodeVector & tests, const Condition& c, TestAtTokenFilterNode& testAtTokenFilterNode)
+	: BetaNode(leftParent, rightParent, tests), c(c), testAtTokenFilterNode(testAtTokenFilterNode) {
 	switch (c.getType())
 	{
 	case Condition::positive:
@@ -29,7 +29,7 @@ const TokenVector & TokenFilterNode::getOutput() {
 					token.at(test.conditionNumberOfArg2).get(test.fieldOfArg2)
 				);
 			}
-			if ((isPositive ^ TestAtTokenFilterNode::performTest(c)) == 0) {
+			if ((isPositive ^ testAtTokenFilterNode.performTest(c)) == 0) {
 				output.push_back(token);
 				output.back().push_back({ 
 					c.get(Field::id), 

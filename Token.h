@@ -4,7 +4,7 @@
 
 class Token : public std::vector<WME> {
 public:
-	void print(size_t level) const;
+	void print(int level) const;
 };
 
 class TokenVector : public std::vector<Token> {

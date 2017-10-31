@@ -3,14 +3,15 @@
 #include "ParamTestNode.h"
 #include "VectorPrinter.h"
 
-ProductionNode::ProductionNode(ReteNodePtr leftParent, const ConditionVector & conds)
-	: ReteNode(false), leftParent(leftParent), conds(conds) {
+ProductionNode::ProductionNode(ReteNodePtr leftParent, const ConditionVector & conds, const std::string& comment)
+	: ReteNode(false), leftParent(leftParent), conds(conds), comment(comment) {
 }
 
-void ProductionNode::print(size_t level) const {
+void ProductionNode::print(int level) const {
 	if (!output.empty()) {
 		std::cout << "matched productions:" << std::endl;
-		VectorPrinter::print(conds, level);
+		std::cout << comment << std::endl;
+		//VectorPrinter::print(conds, level);
 		std::cout << "matched woking memory elements:" << std::endl;
 		VectorPrinter::print(output, level);
 	}

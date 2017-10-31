@@ -8,9 +8,10 @@
 class ProductionNode : public ReteNode {
 	ReteNodePtr leftParent;
 	ConditionVector conds;
+	std::string comment;
 public:
-	ProductionNode(ReteNodePtr leftParent, const ConditionVector& conds);
-	void print(size_t level = 0) const;
+	ProductionNode(ReteNodePtr leftParent, const ConditionVector& conds, const std::string& comment);
+	void print(int level = 0) const;
 	const ConditionVector& getConds();
 	virtual TokenVector& getOutput() override;
 	virtual void clearStatus() override;

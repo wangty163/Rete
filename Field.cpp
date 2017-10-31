@@ -4,8 +4,8 @@
 
 char Field::prefixChar = '$';
 
-std::string Field::getParamString(const std::string & paramName) {
-	return prefixChar + paramName;
+std::string Field::getParamString(const std::string & prefix, size_t paramCount) {
+	return prefixChar + prefix + CStringOp::ToString(paramCount);
 }
 
 std::string Field::getParamName(const std::string & str) {

@@ -2,7 +2,6 @@
 
 #include "JoinNode.h"
 #include "DummyTopNode.h"
-#include "TestAtTokenFilterNode.h"
 #include "TokenFilterNode.h"
 
 ParamTestNodeVector Net::getTestsFromCondition(Condition c, const ConditionVector & condsHigherUp) {
@@ -30,7 +29,7 @@ ReteNodePtr Net::buildOrShareTokenFilterNode(ReteNodePtr parent, AlphaMemoryPtr 
 	StructForHash node = { parent, am, tests, c };
 	auto&& it = dict.find(node);
 	if (it == dict.end()) {
-		auto&& ret = ReteNodePtr(new TokenFilterNode(parent, am, tests, c));
+		auto&& ret = ReteNodePtr(new TokenFilterNode(parent, am, tests, c, testAtTokenFilterNode));
 		dict.insert(std::make_pair(node, ret));
 		return ret;
 	}
@@ -51,7 +50,7 @@ ReteNodePtr Net::buildOrShareNetworkForConditions(ReteNodePtr parent
 	for (auto&& c : conds) {
 		auto&& tests = getTestsFromCondition(c, condsHigherUp);
 		auto&& am = buildOrShareAlphaMemory(c);
-		if (TestAtTokenFilterNode::isNeedFilterToken(c)) {
+		if (testAtTokenFilterNode.isNeedFilterToken(c)) {
 			parent = buildOrShareTokenFilterNode(parent, am, tests, c);
 		}
 		else {
@@ -65,9 +64,9 @@ ReteNodePtr Net::buildOrShareNetworkForConditions(ReteNodePtr parent
 Net::Net() : dummyTopNode(ReteNodePtr((ReteNode*)(new DummyTopNode()))) {
 }
 
-void Net::addProduction(const ConditionVector & conditions) {
+void Net::addProduction(const ConditionVector & conditions, const std::string& comment) {
 	auto&& curentNode = buildOrShareNetworkForConditions(dummyTopNode, conditions, {});
-	resultNodes.insert(ProductionNodePtr(new ProductionNode(curentNode, conditions)));
+	resultNodes.insert(ProductionNodePtr(new ProductionNode(curentNode, conditions, comment)));
 }
 
 void Net::invoke() {
@@ -92,6 +91,10 @@ void Net::addWME(const WME & wme) {
 			}
 		}
 	}
+}
+
+void Net::addFunction(const std::string & key, TestAtTokenFilterNode::JudgeFunctionType judgeFunction) {
+	testAtTokenFilterNode.insertJudgeFunction(key, judgeFunction);
 }
 
 bool StructForHash::operator==(const StructForHash & rhs) const

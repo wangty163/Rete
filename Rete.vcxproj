@@ -120,21 +120,22 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>hiredis.lib;Win32_Interop.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AlphaMemory.cpp" />
     <ClCompile Include="Condition.cpp" />
-    <ClCompile Include="CStringOp.cpp" />
     <ClCompile Include="DummyTopNode.cpp" />
     <ClCompile Include="Field.cpp" />
     <ClCompile Include="BetaNode.cpp" />
+    <ClCompile Include="Log.cpp" />
     <ClCompile Include="Net.cpp" />
     <ClCompile Include="JoinNode.cpp" />
     <ClCompile Include="ProductionNode.cpp" />
     <ClCompile Include="ReteNode.cpp" />
     <ClCompile Include="ParamTestNode.cpp" />
+    <ClCompile Include="StringOp.cpp" />
     <ClCompile Include="TestAtTokenFilterNode.cpp" />
     <ClCompile Include="Token.cpp" />
     <ClCompile Include="TokenFilterNode.cpp" />
@@ -144,13 +145,14 @@
   <ItemGroup>
     <ClInclude Include="AlphaMemory.h" />
     <ClInclude Include="Condition.h" />
-    <ClInclude Include="CStringOp.h" />
     <ClInclude Include="DummyTopNode.h" />
     <ClInclude Include="Field.h" />
     <ClInclude Include="BetaNode.h" />
+    <ClInclude Include="Log.h" />
     <ClInclude Include="Net.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="JoinNode.h" />
+    <ClInclude Include="StringOp.h" />
     <ClInclude Include="VectorPrinter.h" />
     <ClInclude Include="ProductionNode.h" />
     <ClInclude Include="PublicDefine.h" />
@@ -161,6 +163,9 @@
     <ClInclude Include="TokenFilterNode.h" />
     <ClInclude Include="Triples.h" />
     <ClInclude Include="WME.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="oov_pattern.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

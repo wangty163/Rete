@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "StringOp.h"
+
 namespace Field
 {
 	enum Name {
@@ -12,8 +14,15 @@ namespace Field
 	};
 	extern char prefixChar;
 
-	std::string getParamString(const std::string& paramName);
+	template<typename T>
+	std::string getParamString(const T& paramName);
+	std::string getParamString(const std::string& prefix, size_t paramCount);
 	std::string getParamName(const std::string& str);
 	bool isParam(const std::string& str);
 };
 
+
+template<typename T>
+std::string Field::getParamString(const T & paramName) {
+	return prefixChar + CStringOp::ToString(paramName);
+}

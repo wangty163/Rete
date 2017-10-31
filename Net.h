@@ -5,7 +5,7 @@
 #include <iterator>
 
 #include "PublicDefine.h"
-
+#include "TestAtTokenFilterNode.h"
 #include "ReteNode.h"
 #include "Condition.h"
 #include "AlphaMemory.h"
@@ -34,6 +34,7 @@ namespace std {
 
 class Net {
 	ReteNodePtr dummyTopNode;
+	TestAtTokenFilterNode testAtTokenFilterNode;
 	std::unordered_map<Condition, AlphaMemoryPtr> conditionToAlphaMemory;
 	std::unordered_map<StructForHash, ReteNodePtr> dict;
 
@@ -50,7 +51,8 @@ class Net {
 	std::unordered_set<ProductionNodePtr> resultNodes;
 public:
 	Net();
-	void addProduction(const ConditionVector& conditions);
+	void addProduction(const ConditionVector& conditions, const std::string& comment);
 	void invoke();
 	void addWME(const WME& wme);
+	void addFunction(const std::string& key, TestAtTokenFilterNode::JudgeFunctionType judgeFunction);
 };

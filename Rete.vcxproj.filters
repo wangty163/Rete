@@ -8,9 +8,6 @@
     <ClCompile Include="BetaNode.cpp">
       <Filter>BetaPart</Filter>
     </ClCompile>
-    <ClCompile Include="CStringOp.cpp">
-      <Filter>utils</Filter>
-    </ClCompile>
     <ClCompile Include="DummyTopNode.cpp">
       <Filter>BetaPart</Filter>
     </ClCompile>
@@ -47,6 +44,12 @@
     <ClCompile Include="Token.cpp">
       <Filter>Structure</Filter>
     </ClCompile>
+    <ClCompile Include="StringOp.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AlphaMemory.h">
@@ -54,9 +57,6 @@
     </ClInclude>
     <ClInclude Include="BetaNode.h">
       <Filter>BetaPart</Filter>
-    </ClInclude>
-    <ClInclude Include="CStringOp.h">
-      <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="DummyTopNode.h">
       <Filter>BetaPart</Filter>
@@ -106,6 +106,12 @@
     <ClInclude Include="PublicDefine.h">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="StringOp.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="AlphaPart">
@@ -126,5 +132,8 @@
     <Filter Include="ReteNet">
       <UniqueIdentifier>{9e354e69-1592-46a6-9a6e-a2ec662b8006}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="oov_pattern.txt" />
   </ItemGroup>
 </Project>

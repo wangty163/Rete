@@ -2,6 +2,6 @@
 
 #include "VectorPrinter.h"
 
-void Token::print(size_t level) const {
+void Token::print(int level) const {
 	VectorPrinter::print(*this, level);
 }

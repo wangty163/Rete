@@ -18,15 +18,12 @@ public:
 	bool isConstTest(Field::Name fieldName) const;
 	Condition getIndex() const;
 	const Condition::Type& getType() const;
-	void print(size_t level) const;
+	void print(int level) const;
 protected:
 	Type type;
 };
 
-class ConditionVector : public std::vector<Condition> {
-public:
-	ConditionVector(const std::initializer_list<Condition>& lst);
-};
+using ConditionVector = std::vector<Condition>;
 
 namespace std {
 	template <>

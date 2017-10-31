@@ -1,6 +1,6 @@
 #include "Condition.h"
 
-#include "CStringOp.h"
+#include "StringOp.h"
 
 const std::string Condition::arbitraryString = "*"; 
 
@@ -24,14 +24,10 @@ const Condition::Type & Condition::getType() const {
 	return type;
 }
 
-void Condition::print(size_t level) const {
+void Condition::print(int level) const {
 	std::string prefix = CStringOp::repeat("\t", level);
 	std::cout << prefix << fields.at(0) << ","
 		<< (type == negetive ? "~" : "")
 		<< fields.at(1)
 		<< "," << fields.at(2) << std::endl;
-}
-
-ConditionVector::ConditionVector(const std::initializer_list<Condition>& lst)
-	: std::vector<Condition>(lst) {
 }

@@ -1,7 +1,7 @@
 #include "Triples.h"
 
 #include "PublicDefine.h"
-#include "CStringOp.h"
+#include "StringOp.h"
 
 size_t Triples::getIndex(Field::Name fieldName) const
 {
@@ -40,7 +40,7 @@ bool Triples::operator==(const Triples & rhs) const {
 		&& fields.at(2) == rhs.fields.at(2));
 }
 
-void Triples::print(size_t level) const {
+void Triples::print(int level) const {
 	std::string prefix = CStringOp::repeat("\t", level);
 	std::cout << prefix << fields.at(0) << "," << fields.at(1) << "," << fields.at(2)
 		<< std::endl;
