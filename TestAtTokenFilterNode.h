@@ -8,8 +8,7 @@
 
 class TestAtTokenFilterNode {
 public:
-	using JudgeFunctionType = std::function<double(const std::string&, const std::string&)>;
-	//using JudgeFunctionType = bool(*)(const std::string&, const std::string&);
+	using JudgeFunctionType = std::function<bool(const std::string&, const std::string&)>;
 	bool performTest(const Condition& c);
 	bool isNeedFilterToken(const Condition& c);
 	void insertJudgeFunction(const std::string& key, JudgeFunctionType& value);
