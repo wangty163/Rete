@@ -64,19 +64,23 @@ ReteNodePtr Net::buildOrShareNetworkForConditions(ReteNodePtr parent
 Net::Net() : dummyTopNode(ReteNodePtr((ReteNode*)(new DummyTopNode()))) {
 }
 
-void Net::addProduction(const ConditionVector & conditions, const std::string& comment) {
+void Net::addProduction(const ConditionVector & conditions, const std::vector<Condition>& getter) {
 	auto&& curentNode = buildOrShareNetworkForConditions(dummyTopNode, conditions, {});
-	resultNodes.insert(ProductionNodePtr(new ProductionNode(curentNode, conditions, comment)));
+	resultNodes.insert(ProductionNodePtr(new ProductionNode(curentNode, conditions, getter)));
 }
 
-void Net::invoke() {
+std::vector<ConditionVector> Net::invoke() {
+	std::vector<ConditionVector> ret;
 	for (auto&& node : resultNodes) {
-		node->getOutput();
-		node->print();
+		auto&& infos = node->getOutputInfos();
+		std::copy(infos.begin(), infos.end(), std::back_inserter(ret));
+		//node->getOutput();
+		//node->print();
 	}
 	for (auto&& node : resultNodes) {
 		node->clearStatus();
 	}
+	return ret;
 }
 
 void Net::addWME(const WME & wme) {

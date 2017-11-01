@@ -4,179 +4,7 @@
 #include "TestNode/TestAtTokenFilterNode.h"
 #include "../Log.h"
 #include "../StringOp.h"
-
-using namespace std;
-
-
-bool isValidWordClass(const std::string& item) {
-	if (!item.empty() && item.front() == '!') {
-		// 词类说明符：感叹号之后都是汉字
-		auto&& sequence = CStringOp::getSequence(item);
-		for (size_t i = 1; i < sequence.size(); ++i)
-			if (sequence.at(i).length() <= 1)
-				return false;
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-bool isValidWord(const std::string& item) {
-	auto&& sequence = CStringOp::getSequence(item);
-	for (auto&& c : sequence) {
-		if (c.length() <= 1)
-			return false;
-	}
-	return true;
-}
-
-#include <fstream>
-void test_3() {
-	std::ifstream fin(R"(oov_pattern.txt)");
-	myAssert(!fin.fail());
-	std::string line;
-	std::unordered_set<std::string> st;
-	while (!fin.eof()) {
-		getline(fin, line);
-		if (line.empty() || CStringOp::startsWith(line, "//"))
-			continue;
-
-		// line -> {condition}, rhs
-		CStringOp::replaceAll(line, " ", "");
-		CStringOp::replaceAll(line, "\t", "");
-		std::vector<std::string> parts = CStringOp::split(line, "->");
-		myAssert(!parts.empty());
-		line = parts[0];
-		myAssert(line.front() == '[' && line.back() == ']');
-		line.pop_back();
-		line = line.substr(1);
-		std::vector<std::string> conditionStrings = CStringOp::split(line, "][");
-		std::string rhs = parts.size() > 1 ? parts.at(1) : "ok(ALL)";
-
-		// replace param
-		// 规则中出现的变量名 -> 真正使用的变量名
-		std::unordered_map<std::string, std::string> paramDict;
-		std::vector<std::vector<std::vector<Condition>>> trimedConditions;
-		for (size_t i = 0; i < conditionStrings.size(); ++i) {
-			auto&& block = conditionStrings.at(i);
-			std::unordered_set<std::string> paramSet;
-			std::vector<std::vector<Condition>> blockConditions;
-			for (auto& items : CStringOp::split(block, "&")) {
-				myAssertPlus(!items.empty(), line);
-				std::vector<Condition> itemConditions;
-				for (auto& item : CStringOp::split(items, "|")) {
-					myAssertPlus(!item.empty(), items);
-					auto&& standardParamName = Field::getParamString(i);
-					// 词类
-					if (item.front() == '!') {
-						myAssertPlus(isValidWordClass(item), item);
-						itemConditions.emplace_back(standardParamName, "in", item);
-					}
-					// 都是汉字
-					else if (!isascii(item.front())) {
-						myAssertPlus(isValidWord(item), item);
-						itemConditions.emplace_back(standardParamName, "word", item);
-					}
-					// 变量名
-					else if (item.front() == 'w') {
-						size_t ind = 1;
-						while (ind < item.size() &&
-							item.at(ind) != '.' &&
-							item.at(ind) != '<' &&
-							item.at(ind) != '>' &&
-							item.at(ind) != '!' &&
-							item.at(ind) != '=') {
-							ind++;
-						}
-						paramSet.insert(item.substr(0, ind));
-						paramDict.insert_or_assign(item.substr(0, ind), standardParamName);
-						myAssertPlus(paramSet.size() <= 1, block);
-						// item中只含有一个变量名称
-						if (ind == item.size()) {
-						}
-						else {
-							// item中含有属性筛选符
-							if (item.at(ind) == '.') {
-
-							}
-							// item中没有属性筛选符
-							else {
-								size_t start = ind;
-								while (ind < item.size() &&
-									(item.at(ind) == '>' ||
-										item.at(ind) == '<' ||
-										item.at(ind) == '=' ||
-										item.at(ind) == '!')) {
-									ind++;
-								}
-								std::string opType = item.substr(start, ind - start);
-								st.insert(opType);
-								//std::cout << item << " " << opType << std::endl;
-							}
-						}
-					}
-					// 其他符号
-					else {
-						myAssertPlus(!isalpha(item.front()), "【" + item + "】: 独立出现的字母，有可能是词性，也有可能是词语，规则中不允许出现");
-
-						itemConditions.emplace_back(Field::getParamString(i), "word", item);
-					}
-				}
-				blockConditions.push_back(itemConditions);
-			}
-		}
-
-		// trim format
-		std::vector<std::vector<std::vector<std::string>>> all;
-		for (size_t i = 0; i < conditionStrings.size(); ++i) {
-			auto&& part = conditionStrings.at(i);
-			myAssertPlus(CStringOp::Find(part, "[") == std::string::npos, part);
-			myAssertPlus(CStringOp::Find(part, "]") == std::string::npos, part);
-			myAssertPlus(!part.empty(), part);
-			std::vector<std::vector<std::string>> trimedCondition;
-			if (CStringOp::Find(part, "&")) {
-				auto&& andParts = CStringOp::split(part, "&");
-				for (auto&& andPart : andParts) {
-					if (CStringOp::Find(andPart, "|")) {
-						trimedCondition.push_back({});
-						auto&& orParts = CStringOp::split(part, "|");
-						for (auto&& orPart : orParts) {
-
-						}
-					}
-					else {
-						trimedCondition.push_back({ andPart });
-					}
-				}
-			}
-			else {
-
-			}
-
-		}
-	}
-	for (auto&& t : st) {
-		std::cout << t << std::endl;
-	}
-}
-
-namespace CStringOp {
-	bool isChinese(const std::string& str) {
-		return !str.empty() && !isascii((unsigned char)str.front());
-	}
-	bool isDigit(const std::string& str) {
-		return !str.empty() && isdigit((unsigned char)str.front());
-	}
-	bool isAlpha(const std::string& str) {
-		return !str.empty() && isalpha((unsigned char)str.front());
-	}
-	bool isValidWord(const std::string& str) {
-		return !str.empty() && str != "[" && str != "]" && 
-			str != "|" && str != "&" && (
-				str == "/" || str == "\\" || isChinese(str));
-	}
-}
+#include "Utils/VectorPrinter.h"
 
 //#define main_debug_output
 #ifndef main_debug_output
@@ -188,25 +16,54 @@ namespace CStringOp {
 #define debugV(a, b, c, d, e)
 #endif
 
-std::vector<std::vector<std::vector<Condition>>> dfa(const std::string& pattern) {
+using namespace std;
+
+namespace CStringOp {
+	bool isChinese(const std::string& str) {
+		return !str.empty() && !isascii((unsigned char)str.front());
+	}
+	bool isDigit(const std::string& str) {
+		return !str.empty() && isdigit((unsigned char)str.front());
+	}
+	bool isAlpha(const std::string& str) {
+		return !str.empty() && isalpha((unsigned char)str.front());
+	}
+}
+
+void generate(std::vector<std::vector<Condition>>& result, size_t index, std::vector<Condition>& partResult, const std::vector<std::vector<std::vector<Condition>>>& cs) {
+	if (index == cs.size()) {
+		result.push_back(partResult);
+	}
+	else {
+		for (auto&& conditionsWithAnd : cs.at(index)) {
+			for (auto&& c : conditionsWithAnd)
+				partResult.push_back(c);
+			generate(result, index + 1, partResult, cs);
+			partResult.erase(partResult.end() - conditionsWithAnd.size(), partResult.end());
+		}
+	}
+}
+
+std::pair<std::vector<std::vector<Condition>>, std::vector<Condition>> parse(const std::string& pattern, const std::string& rhs) {
+	std::unordered_map<std::string, std::unordered_set<std::string>> dict;
 	auto&& vec = CStringOp::getSequence(pattern);
 	int status = 0;
 	// { { a } , { b , c } }     ->     a & (b | c)
 	std::vector<std::vector<std::vector<Condition>>> conditions;
 	std::vector<std::vector<Condition>> tmpConditions;
-	std::vector<std::string> memory(100);
+	std::vector<std::string> memory;
 	Condition::Type type = Condition::positive;
 	// 规则中出现的变量名 -> 真正使用的变量名
 	std::unordered_map<std::string, std::string> paramMapping;
-	int memoryIndex = -1, blockCount = 0, tmpParamCount = 0;
+	int blockCount = 0, tmpParamCount = 0;
 
 	auto&& getTmpParam = [&tmpParamCount]() {
 		return Field::getParamString("t", tmpParamCount++);
 	};
-	auto&& memoryToCondition = [&memory, &memoryIndex, &pattern, &getTmpParam]() {
-		myAssertPlus(memoryIndex + 1 >= 4, pattern);
+	auto&& memoryToCondition = [&memory, &pattern, &getTmpParam]() {
+		myAssertPlus(memory.size() >= 4, pattern);
 		std::vector<Condition> ret;
-		if (memoryIndex + 1 == 4) {
+		if (memory.size() == 4) {
 			if (memory.at(2) == "=")
 				ret.emplace_back(memory.at(0), memory.at(1), memory.at(3));
 			else if (memory.at(2) == "!=")
@@ -297,40 +154,39 @@ std::vector<std::vector<std::vector<Condition>>> dfa(const std::string& pattern)
 			else
 				myAssertPlus(false, pattern);
 		}
+		memory.clear();
 		return ret;
 	};
-	auto&& normalizeParam = [&memory, &paramMapping, &blockCount, &pattern](int index) {
-		std::string& paramName = memory.at(index);
+	auto&& normalizeParam = [&memory, &paramMapping, &blockCount, &pattern]() {
+		std::string& paramName = memory.back();
 		std::string& paramString = Field::getParamString("w", blockCount);
 		myAssertPlus(paramMapping.count(paramName) == 0 || 
 			paramMapping[paramName] == paramString, pattern);
 		paramMapping.insert({ paramName, paramString });
 		paramName = paramString;
 	};
-	auto&& getNormalizedParam = [&memory, &paramMapping, &blockCount, &pattern](int index) {
-		std::string& paramName = memory.at(index);
+	auto&& getNormalizedParam = [&memory, &paramMapping, &blockCount, &pattern]() {
+		std::string& paramName = memory.back();
 		myAssertPlus(paramMapping.count(paramName) != 0, pattern);
-		memory.at(index) = paramMapping[paramName];
+		memory.back() = paramMapping[paramName];
 	};
-
-	auto&& generateCondition = [&tmpConditions, &memory, &memoryIndex, &memoryToCondition]() {
+	auto&& generateTmpCondition = [&tmpConditions, &memoryToCondition]() {
 		tmpConditions.push_back(memoryToCondition());
-		//tmpConditions.push_back(std::vector<std::string>(memoryIndex + 1));
-		//for (int i = 0; i <= memoryIndex; ++i)
-		//	tmpConditions.back().at(i) = memory.at(i);
 	};
-	auto&& generateConditionAtOrOp = [&generateCondition]() {
-		generateCondition();
-	};
-	auto&& generateConditionAtAndOp = [&generateCondition, &tmpConditions, &conditions]() {
-		generateCondition();
+	auto&& generateCondition = [&tmpConditions, &conditions]() {
 		conditions.push_back(tmpConditions);
 		tmpConditions.clear();
 	};
-	auto&& generateConditionAtBlockEnd = [&generateCondition, &tmpConditions, &conditions]() {
+	auto&& generateConditionAtOrOp = [&generateTmpCondition]() {
+		generateTmpCondition();
+	};
+	auto&& generateConditionAtAndOp = [&generateTmpCondition, &generateCondition, &tmpConditions, &conditions]() {
+		generateTmpCondition();
 		generateCondition();
-		conditions.push_back(tmpConditions);
-		tmpConditions.clear();
+	};
+	auto&& generateConditionAtBlockEnd = [&generateTmpCondition, &generateCondition, &tmpConditions, &conditions]() {
+		generateTmpCondition();
+		generateCondition();
 	};
 
 	for (size_t index = 0; index < vec.size() && status >= 0; ++index) {
@@ -340,100 +196,107 @@ std::vector<std::vector<std::vector<Condition>>> dfa(const std::string& pattern)
 		{
 		case 0:
 			if (input == "[") {
-				memory.at(0) = Field::getParamString("w", blockCount);
-				memory.at(1) = ".at_start";
-				memory.at(2) = "=";
-				memory.at(memoryIndex = 3) = "*";
+				memory.push_back(Field::getParamString("w", blockCount));
+				memory.push_back(".at_start");
+				memory.push_back("=");
+				memory.push_back("*");
+				generateTmpCondition();
 				generateCondition();
-				conditions.push_back(tmpConditions);
-				tmpConditions.clear();
-				//conditions.push_back({ {Field::getParamString("w", 0), ".at_start", "=", "*"} });
 				status = 1;
 			}
 			else status = -1;
 			break;
 		case 1:
 			if (input == "!") {
-				memory.at(0) = Field::getParamString("w", blockCount);
-				memory.at(1) = ".in";
-				memory.at(2) = "=";
-				memory.at(memoryIndex = 3) = input;
+				memory.push_back(Field::getParamString("w", blockCount));
+				memory.push_back(".in");
+				memory.push_back("=");
+				memory.push_back(input);
 				status = 2;
 			}
 			else if (input == "w") {
-				memory.at(memoryIndex = 0) = input;
+				memory.push_back(input);
 				status = 25;
 			}
 			else if (CStringOp::isChinese(input)) {
-				memory.at(0) = Field::getParamString("w", blockCount);
-				memory.at(1) = ".word";
-				memory.at(2) = "=";
-				memory.at(memoryIndex = 3) = input;
+				memory.push_back(Field::getParamString("w", blockCount));
+				memory.push_back(".word");
+				memory.push_back("=");
+				memory.push_back(input);
 				status = 4;
 			}
 			else if (input == "/" || input == "\\") {
-				memory.at(0) = Field::getParamString("w", blockCount);
-				memory.at(1) = ".word";
-				memory.at(2) = "=";
-				memory.at(memoryIndex = 3) = input;
+				memory.push_back(Field::getParamString("w", blockCount));
+				memory.push_back(".word");
+				memory.push_back("=");
+				memory.push_back(input);
 				status = 4;
 			}
 			else status = -1;
 			break;
 		case 2:
 			if (CStringOp::isChinese(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 5;
 			}
 			break;
 		case 3:
 			if (CStringOp::isDigit(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 3;
 			}
 			else if (input == "~") {
-				normalizeParam(0);
-				memory.at(1) = ".word";
-				memory.at(memoryIndex = 2) = "~";
+				dict[memory.back()].insert(Field::getParamString("w", blockCount));
+				normalizeParam();
+				memory.push_back(".word");
+				memory.push_back("~");
 				status = 6;
 			}
 			else if (input == ".") {
-				normalizeParam(0);
-				memory.at(memoryIndex = 1) = input;
+				dict[memory.back()].insert(Field::getParamString("w", blockCount));
+				normalizeParam();
+				memory.push_back(input);
 				status = 7;
 			}
 			else if (input == "!") {
-				normalizeParam(0);
-				memory.at(1) = ".word";
-				memory.at(memoryIndex = 2) = input;
+				dict[memory.back()].insert(Field::getParamString("w", blockCount));
+				normalizeParam();
+				memory.push_back(".word");
+				memory.push_back(input);
 				status = 8;
 			}
 			else if (input == "=") {
-				normalizeParam(0);
-				memory.at(1) = ".word";
-				memory.at(memoryIndex = 2) = input;
+				dict[memory.back()].insert(Field::getParamString("w", blockCount));
+				normalizeParam();
+				memory.push_back(".word");
+				memory.push_back(input);
 				status = 9;
 			}
 			else if (input == "]") {
-				normalizeParam(0);
+				dict[memory.back()].insert(Field::getParamString("w", blockCount));
+				normalizeParam();
+				memory.clear();
 				status = 24;
 			}
 			else status = -1;
 			break;
 		case 4:
 			if (CStringOp::isChinese(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 4;
 			}
 			else if (input == "|") {
+				dict[memory.back()].insert(Field::getParamString("w", blockCount));
 				generateConditionAtOrOp();
 				status = 1;
 			}
 			else if (input == "&") {
+				dict[memory.back()].insert(Field::getParamString("w", blockCount));
 				generateConditionAtAndOp();
 				status = 1;
 			}
 			else if (input == "]") {
+				dict[memory.back()].insert(Field::getParamString("w", blockCount));
 				generateConditionAtBlockEnd();
 				status = 24;
 			}
@@ -441,18 +304,21 @@ std::vector<std::vector<std::vector<Condition>>> dfa(const std::string& pattern)
 			break;
 		case 5:
 			if (CStringOp::isChinese(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 5;
 			}
 			else if (input == "|") {
+				dict[memory.back()].insert(Field::getParamString("w", blockCount));
 				generateConditionAtOrOp();
 				status = 1;
 			}
 			else if (input == "&") {
+				dict[memory.back()].insert(Field::getParamString("w", blockCount));
 				generateConditionAtAndOp();
 				status = 1;
 			}
 			else if (input == "]") {
+				dict[memory.back()].insert(Field::getParamString("w", blockCount));
 				generateConditionAtBlockEnd();
 				status = 24;
 			}
@@ -460,134 +326,134 @@ std::vector<std::vector<std::vector<Condition>>> dfa(const std::string& pattern)
 			break;
 		case 6:
 			if (CStringOp::isAlpha(input)) {
-				memory.at(++memoryIndex) = input;
+				memory.push_back(input);
 				status = 10;
 			}
 			else status = -1;
 			break;
 		case 7:
 			if (CStringOp::isAlpha(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 11;
 			}
 			else status = -1;
 			break;
 		case 8:
 			if (input == "=") {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 9;
 			}
 			else status = -1;
 			break;
 		case 9:
 			if (input == "!") {
-				memory.at(++memoryIndex) = input;
+				memory.push_back(input);
 				status = 16;
 			}
 			else if (CStringOp::isDigit(input)) {
-				memory.at(++memoryIndex) = input;
+				memory.push_back(input);
 				status = 17;
 			}
 			else if (input == "w") {
-				memory.at(++memoryIndex) = input;
+				memory.push_back(input);
 				status = 18;
 			}
 			else if (CStringOp::isAlpha(input)) {
-				memory.at(++memoryIndex) = input;
+				memory.push_back(input);
 				status = 19;
 			}
 			else if (CStringOp::isChinese(input)) {
-				memory.at(++memoryIndex) = input;
+				memory.push_back(input);
 				status = 20;
 			}
 			else status = -1;
 			break;
 		case 10:
 			if (CStringOp::isAlpha(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 10;
 			}
 			else if (input == "(") {
-				memory.at(++memoryIndex) = "";
+				memory.push_back("");
 				status = 12;
 			}
 			else status = -1;
 			break;
 		case 11:
 			if (input == "~") {
-				memory.at(++memoryIndex) = input;
+				memory.push_back(input);
 				status = 6;
 			}
 			else if (CStringOp::isAlpha(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 11;
 			}
 			else if (input == "=") {
-				memory.at(++memoryIndex) = input;
+				memory.push_back(input);
 				status = 9;
 			}
 			else if (input == ">") {
-				memory.at(++memoryIndex) = input;
+				memory.push_back(input);
 				status = 13;
 			}
 			else if (input == "<") {
-				memory.at(++memoryIndex) = input;
+				memory.push_back(input);
 				status = 13;
 			}
 			else status = -1;
 			break;
 		case 12:
 			if (input == "w") {
-				memory.at(memoryIndex) = input;
+				memory.back() += input;
 				status = 14;
 			}
 			else if (CStringOp::isChinese(input)) {
-				memory.at(memoryIndex) = input;
+				memory.back() += input;
 				status = 26;
 			}
 			else if (CStringOp::isDigit(input) || CStringOp::isAlpha(input)) {
-				memory.at(memoryIndex) = input;
+				memory.back() += input;
 				status = 26;
 			}
 			else status = -1;
 			break;
 		case 13:
 			if (input == "=") {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 9;
 			}
 			else if (input == "!") {
-				memory.at(++memoryIndex) = input;
+				memory.push_back(input);
 				status = 16;
 			}
 			else if (CStringOp::isDigit(input)) {
-				memory.at(++memoryIndex) = input;
+				memory.push_back(input);
 				status = 17;
 			}
 			else if (input == "w") {
-				memory.at(++memoryIndex) = input;
+				memory.push_back(input);
 				status = 18;
 			}
 			else if (CStringOp::isAlpha(input)) {
-				memory.at(++memoryIndex) = input;
+				memory.push_back(input);
 				status = 19;
 			}
 			else if (CStringOp::isChinese(input)) {
-				memory.at(++memoryIndex) = input;
+				memory.push_back(input);
 				status = 20;
 			}
 			else status = -1;
 			break;
 		case 14:
 			if (CStringOp::isDigit(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 27;
 			}
 			else if (input == ")") {
 				status = 15;
 			}
 			else if (input == ",") {
-				memory.at(++memoryIndex) = "";
+				memory.push_back("");
 				status = 12;
 			}
 			else status = -1;
@@ -609,14 +475,14 @@ std::vector<std::vector<std::vector<Condition>>> dfa(const std::string& pattern)
 			break;
 		case 16:
 			if (CStringOp::isChinese(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 21;
 			}
 			else status = -1;
 			break;
 		case 17:
 			if (CStringOp::isDigit(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 17;
 			}
 			else if (input == "|") {
@@ -635,7 +501,7 @@ std::vector<std::vector<std::vector<Condition>>> dfa(const std::string& pattern)
 			break;
 		case 18:
 			if (CStringOp::isDigit(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 28;
 			}
 			else if (input == "|") {
@@ -654,7 +520,7 @@ std::vector<std::vector<std::vector<Condition>>> dfa(const std::string& pattern)
 			break;
 		case 19:
 			if (CStringOp::isAlpha(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 19;
 			}
 			else if (input == "|") {
@@ -673,7 +539,7 @@ std::vector<std::vector<std::vector<Condition>>> dfa(const std::string& pattern)
 			break;
 		case 20:
 			if (CStringOp::isChinese(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 20;
 			}
 			else if (input == "|") {
@@ -692,7 +558,7 @@ std::vector<std::vector<std::vector<Condition>>> dfa(const std::string& pattern)
 			break;
 		case 21:
 			if (CStringOp::isChinese(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 21;
 			}
 			else if (input == "|") {
@@ -711,14 +577,14 @@ std::vector<std::vector<std::vector<Condition>>> dfa(const std::string& pattern)
 			break;
 		case 22:
 			if (CStringOp::isAlpha(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 23;
 			}
 			else status = -1;
 			break;
 		case 23:
 			if (CStringOp::isAlpha(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 23;
 			}
 			else if (input == "|") {
@@ -741,7 +607,7 @@ std::vector<std::vector<std::vector<Condition>>> dfa(const std::string& pattern)
 			break;
 		case 25:
 			if (CStringOp::isDigit(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 3;
 			}
 			else status = -1;
@@ -749,59 +615,59 @@ std::vector<std::vector<std::vector<Condition>>> dfa(const std::string& pattern)
 		case 26:
 			if (CStringOp::isChinese(input) || CStringOp::isAlpha(input) ||
 				CStringOp::isDigit(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 26;
 			}
 			else if (input == ")") {
 				status = 15;
 			}
 			else if (input == ",") {
-				memory.at(++memoryIndex) = "";
+				memory.push_back("");
 				status = 12;
 			}
 			else status = -1;
 			break;
 		case 27:
 			if (CStringOp::isDigit(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 27;
 			}
 			else if (input == ")") {
-				getNormalizedParam(memoryIndex);
+				getNormalizedParam();
 				status = 15;
 			}
 			else if (input == ",") {
-				getNormalizedParam(memoryIndex);
-				memory.at(++memoryIndex) = "";
+				getNormalizedParam();
+				memory.push_back("");
 				status = 12;
 			}
 			else status = -1;
 			break;
 		case 28:
 			if (CStringOp::isDigit(input)) {
-				memory.at(memoryIndex) += input;
+				memory.back() += input;
 				status = 28;
 			}
 			else if (input == ".") {
-				getNormalizedParam(memoryIndex);
-				memory.at(++memoryIndex) = input;
+				getNormalizedParam();
+				memory.push_back(input);
 				status = 22;
 			}
 			else if (input == "|") {
-				getNormalizedParam(memoryIndex);
-				memory.at(++memoryIndex) = ".word";
+				getNormalizedParam();
+				memory.push_back(".word");
 				generateConditionAtOrOp();
 				status = 1;
 			}
 			else if (input == "&") {
-				getNormalizedParam(memoryIndex);
-				memory.at(++memoryIndex) = ".word";
+				getNormalizedParam();
+				memory.push_back(".word");
 				generateConditionAtAndOp();
 				status = 1;
 			}
 			else if (input == "]") {
-				getNormalizedParam(memoryIndex);
-				memory.at(++memoryIndex) = ".word";
+				getNormalizedParam();
+				memory.push_back(".word");
 				generateConditionAtBlockEnd();
 				status = 24;
 			}
@@ -812,27 +678,52 @@ std::vector<std::vector<std::vector<Condition>>> dfa(const std::string& pattern)
 		}
 		else if (input == "[") {
 			if (blockCount != 0) {
-				memory.at(0) = Field::getParamString("w", blockCount - 1);
-				memory.at(1) = ".offset_end";
-				memory.at(2) = "=";
-				memory.at(3) = Field::getParamString("w", blockCount);
-				memory.at(memoryIndex = 4) = ".offset_start";
+				memory.push_back(Field::getParamString("w", blockCount - 1));
+				memory.push_back(".offset_end");
+				memory.push_back("=");
+				memory.push_back(Field::getParamString("w", blockCount));
+				memory.push_back(".offset_start");
+				generateTmpCondition();
 				generateCondition();
-				conditions.push_back(tmpConditions);
-				tmpConditions.clear();
-				//conditions.push_back({ {Field::getParamString("w", blockCount - 1), ".offset_end", "=", Field::getParamString("w", blockCount), ".offset_start"} });
 			}
 		}
 		debugI(status);
 	}
-	memory.at(0) = Field::getParamString("w", blockCount - 1);
-	memory.at(1) = ".at_end";
-	memory.at(2) = "=";
-	memory.at(memoryIndex = 3) = "*";
+
+	memory.push_back(Field::getParamString("w", blockCount - 1));
+	memory.push_back(".at_end");
+	memory.push_back("=");
+	memory.push_back("*");
+	generateTmpCondition();
 	generateCondition();
-	conditions.push_back(tmpConditions);
-	tmpConditions.clear();
-	//conditions.push_back({ {Field::getParamString("w", blockCount - 1), ".at_end", "*"} });
+
+	std::vector<Condition> paramGetter;
+	if (rhs.empty()) {
+		paramGetter.reserve(blockCount);
+		for (size_t i = 0; i < blockCount; ++i)
+			paramGetter.emplace_back(Field::getParamString("w", i), "ok", "");
+	}
+	else {
+		size_t i = CStringOp::Find(rhs, "(");
+		myAssertPlus(i != std::string::npos, rhs);
+		myAssertPlus(rhs.back() == ')', rhs);
+		auto&& opType = rhs.substr(0, i);
+		auto&& params = CStringOp::split(rhs.substr(i + 1, rhs.length() - i - 2), ",");
+		if (opType == "ok" || opType == "mark") {
+			myAssertPlus(params.size() == 1, rhs);
+			myAssertPlus(dict[params.front()].size() == 1, pattern + "->" + rhs);
+			paramGetter.emplace_back(*(dict[params.front()].begin()), opType, "");
+		}
+		else if (opType == "rewrite") {
+			myAssertPlus(params.size() == 2, rhs);
+			myAssertPlus(dict[params.front()].size() == 1, pattern + "->" + rhs);
+			paramGetter.emplace_back(*(dict[params.front()].begin()), opType, params.at(1));
+		}
+		else
+			myAssertPlus(false, rhs);
+	}
+	paramGetter.emplace_back(pattern, rhs, "");
+	myAssertPlus(status == 24, pattern);
 
 #ifdef main_debug_output
 	for (auto&& conditionPart : conditions) {
@@ -852,23 +743,11 @@ std::vector<std::vector<std::vector<Condition>>> dfa(const std::string& pattern)
 	}
 #endif // main_debug_output
 
-	myAssertPlus(status == 24, pattern);
-	return conditions;
+	std::vector<std::vector<Condition>> result;
+	generate(result, 0, std::vector<Condition>(), conditions);
+	return std::make_pair(result, paramGetter);
 }
 
-void generate(std::vector<std::vector<Condition>>& result, size_t index, std::vector<Condition>& partResult, const std::vector<std::vector<std::vector<Condition>>>& cs) {
-	if (index == cs.size()) {
-		result.push_back(partResult);
-	}
-	else {
-		for (auto&& conditionsWithAnd : cs.at(index)) {
-			for (auto&& c : conditionsWithAnd)
-				partResult.push_back(c);
-			generate(result, index + 1, partResult, cs);
-			partResult.erase(partResult.end() - conditionsWithAnd.size(), partResult.end());
-		}
-	}
-}
 
 Net getNet() {
 	Net net;
@@ -921,14 +800,13 @@ std::unordered_map<std::string, std::vector<std::string>> readWordFile(const str
 	}
 	return mapWord2Class;
 }
-void addSentence(Net& net, std::vector<std::string> wordVector, 
-	std::vector<std::string> posVector) {
+void addSentence(Net& net, std::vector<std::string> wordVector, std::vector<std::string> posVector) {
 	myAssert(wordVector.size() == posVector.size());
 
 	std::unordered_set<size_t> startIndex, endIndex;
 	for (size_t i = 0, offset = 0; i < wordVector.size(); ++i) {
 		size_t len = CStringOp::getSequenceCnt(wordVector.at(i));
-		std::string name = CStringOp::ToString(offset) + "-" + CStringOp::ToString(len);
+		std::string name = CStringOp::ToString(offset) + "-" + CStringOp::ToString(offset + len);
 
 		net.addWME({ name, ".pos", posVector.at(i) });
 		startIndex.insert(offset);
@@ -964,19 +842,6 @@ void addSentence(Net& net, std::vector<std::string> wordVector,
 	}
 }
 void test_4() {
-#ifdef main_debug_output
-	std::string pattern;
-	while (std::cin >> pattern) {
-		std::vector<std::vector<Condition>> result;
-		generate(result, 0, std::vector<Condition>(), dfa(pattern));
-		for (auto&& conditions : result) {
-			for (auto&& c : conditions)
-				c.print(0);
-			puts("----------------------------------");
-		}
-	}
-#endif // main_debug_output
-
 	Net net = getNet();
 	std::ifstream fin(R"(oov_pattern.txt)");
 	myAssert(!fin.fail());
@@ -991,26 +856,78 @@ void test_4() {
 		CStringOp::replaceAll(line, " ", "");
 		CStringOp::replaceAll(line, "\t", "");
 		std::vector<std::string> parts = CStringOp::split(line, "->");
-		std::vector<std::vector<Condition>> result;
-		generate(result, 0, std::vector<Condition>(), dfa(parts.front()));
-		for (auto&& conditions : result) {
-			net.addProduction(conditions, parts.front());
+		parts.push_back("");
+
+		auto&& pair = parse(parts.at(0), parts.at(1));
+
+		for (auto&& conditions : pair.first) {
+			net.addProduction(conditions, pair.second);
 		}
 	}
 	CLog::write("build network", "end");
 
-	addSentence(net, {
-		"在", "一", "次", "抗日", "战役", "中", "，", "一", "向", "跋扈", "，", "从未", "遇到", "败绩", "的", "日军", "，", "竟然", "在", "白崇禧", "那里", "系数", "被", "灭", "，", "伤亡", "率", "超国军", "两", "倍", "。"
-	}, {
-		"p", "m", "q", "vn", "n", "f", "w", "m", "p", "a", "w", "d", "v", "n", "uj", "n", "w", "d", "p", "nr", "r", "n", "p", "v", "w", "v", "v", "nr", "m", "q", "w"
-	});
+	std::vector<std::string> wordVector = {
+		"毛泽东", "可谓", "是", "奋斗", "了", "一", "生", "，", "子女", "们", "却", "死", "得", "死", "，", "丢", "的", "丢", " ，", "晚年", "的", "毛泽东", "可谓", "是", "十分", "孤独", "，", "为", "大家", "创造", "了", "新", "生活", "，", "自己", "却", "不", "能", "享受", "天伦之乐", "。"
+	}, posVector = {
+		"nr", "v", "v", "v", "ul", "m", "v", "w", "n", "k", "d", "v", "ud", "a", "w", "v", "uj", "v", "w", "t", "uj", "nr", "v", "v", "d", "a", "w", "p", "r", "v", "ul", "a", "vn", "w", "r", "d", "d", "v", "v", "i", "w"
+	};
+	std::string sentence;
+	for (auto&& w : wordVector)
+		sentence += w;
+	auto&& vec = CStringOp::getSequence(sentence);
+	addSentence(net, wordVector, posVector);
 
 	CLog::write("invoke", "start");
-	net.invoke();
+	auto&& infos = net.invoke();
+	for (auto&& info : infos) {
+		for (size_t i = 0; i + 1 < info.size(); ++i) {
+			auto&& range = info.at(i).get(Field::id);
+			auto&& parts = CStringOp::split(range, "-");
+			size_t start = CStringOp::FromString<size_t>(parts.at(0));
+			size_t end = CStringOp::FromString<size_t>(parts.at(1));
+			std::string str;
+			for (size_t i = start; i < end; ++i)
+				str += vec.at(i);
+			info.at(i).set(Field::id, str);
+		}
+		VectorPrinter::print(info, 0);
+	}
 	CLog::write("invoke", "end");
 }
 
+void test_for_debug() {
+	Net net = getNet();
+
+	// input
+	std::string pattern = "[w1.pos=d][w2.pos=v][w3.pos=ud]";
+	auto&& it = parse(pattern, "");
+	for (auto&& conditions : it.first) {
+		net.addProduction(conditions, it.second);
+		for (auto&& c : conditions)
+			c.print(0);
+		puts("----------------------------------");
+	}
+
+	addSentence(net, {
+		"毛泽东", "可谓", "是", "奋斗", "了", "一", "生", "，", "子女", "们", "却", "死", "得", "死", "，", "丢", "的", "丢", " ，", "晚年", "的", "毛泽东", "可谓", "是", "十分", "孤独", "，", "为", "大家", "创造", "了", "新", "生活", "，", "自己", "却", "不", "能", "享受", "天伦之乐", "。"
+	}, {
+		"nr", "v", "v", "v", "ul", "m", "v", "w", "n", "k", "d", "v", "ud", "a", "w", "v", "uj", "v", "w", "t", "uj", "nr", "v", "v", "d", "a", "w", "p", "r", "v", "ul", "a", "vn", "w", "r", "d", "d", "v", "v", "i", "w"
+	});
+
+	CLog::write("invoke", "start");
+	auto&& infos = net.invoke();
+	for (auto&& info : infos) {
+		VectorPrinter::print(info, 0);
+	}
+	CLog::write("invoke", "end");
+	system("pause");
+}
+
 int main() {
+#ifndef main_debug_output
 	test_4();
+#else
+	test_for_debug();
+#endif
 	return 0;
 }

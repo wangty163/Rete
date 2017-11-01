@@ -51,8 +51,8 @@ class Net {
 	std::unordered_set<ProductionNodePtr> resultNodes;
 public:
 	Net();
-	void addProduction(const ConditionVector& conditions, const std::string& comment);
-	void invoke();
+	void addProduction(const ConditionVector& conditions, const std::vector<Condition>& getter);
+	std::vector<ConditionVector> invoke();
 	void addWME(const WME& wme);
 	void addFunction(const std::string& key, TestAtTokenFilterNode::JudgeFunctionType judgeFunction);
 };
