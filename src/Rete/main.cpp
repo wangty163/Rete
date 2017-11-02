@@ -18,6 +18,8 @@
 
 using namespace std;
 
+Net net;
+
 namespace CStringOp {
 	bool isChinese(const std::string& str) {
 		return !str.empty() && !isascii((unsigned char)str.front());
@@ -44,11 +46,22 @@ void generate(std::vector<std::vector<Condition>>& result, size_t index, std::ve
 	}
 }
 
-std::pair<std::vector<std::vector<Condition>>, std::vector<Condition>> parse(const std::string& pattern, const std::string& rhs) {
+std::pair<std::vector<ConditionVector>, ConditionVector> parse(const std::string& rawLine) {
+	std::string line = rawLine;
+	if (line.empty() || CStringOp::startsWith(line, "//"))
+		return {};
+	line = CStringOp::replaceAll(line, " ", "");
+	line = CStringOp::replaceAll(line, "\t", "");
+	std::vector<std::string> parts = CStringOp::split(line, "->");
+	parts.push_back("");
+
+	std::string pattern = parts.at(0), rhs = parts.at(1);
+
+	//const std::string& pattern, const std::string& rhs;
 	std::unordered_map<std::string, std::unordered_set<std::string>> dict;
 	auto&& vec = CStringOp::getSequence(pattern);
 	int status = 0;
-	// { { a } , { b , c } }     ->     a & (b | c)
+	// { { {a} } , { {b} , {c}, {d, e} } }     ->     a & ( b | c | (d & e) )
 	std::vector<std::vector<std::vector<Condition>>> conditions;
 	std::vector<std::vector<Condition>> tmpConditions;
 	std::vector<std::string> memory;
@@ -94,19 +107,29 @@ std::pair<std::vector<std::vector<Condition>>, std::vector<Condition>> parse(con
 		else {
 			if (memory.at(2) == "~") {
 				if (memory.at(3) == "combine") {
-					ret.emplace_back(memory.at(0), memory.at(3) + "_" + memory.at(5), memory.at(4));
+					auto&& tmpParam = getTmpParam();
+					ret.emplace_back(memory.at(0), memory.at(1), tmpParam);
+					ret.emplace_back(tmpParam, memory.at(3) + "_" + memory.at(5), memory.at(4));
 				}
 				else if (memory.at(3) == "prefix") {
-					ret.emplace_back(memory.at(0), memory.at(3), memory.at(4));
+					auto&& tmpParam = getTmpParam();
+					ret.emplace_back(memory.at(0), memory.at(1), tmpParam);
+					ret.emplace_back(tmpParam, memory.at(3), memory.at(4));
 				}
 				else if (memory.at(3) == "suffix") {
-					ret.emplace_back(memory.at(0), memory.at(3), memory.at(4));
+					auto&& tmpParam = getTmpParam();
+					ret.emplace_back(memory.at(0), memory.at(1), tmpParam);
+					ret.emplace_back(tmpParam, memory.at(3), memory.at(4));
 				}
 				else if (memory.at(3) == "antonym") {
-					ret.emplace_back(memory.at(0), memory.at(3), memory.at(4));
+					auto&& tmpParam = getTmpParam();
+					ret.emplace_back(memory.at(0), memory.at(1), tmpParam);
+					ret.emplace_back(tmpParam, memory.at(3), memory.at(4));
 				}
 				else if (memory.at(3) == "synonym") {
-					ret.emplace_back(memory.at(0), memory.at(3), memory.at(4));
+					auto&& tmpParam = getTmpParam();
+					ret.emplace_back(memory.at(0), memory.at(1), tmpParam);
+					ret.emplace_back(tmpParam, memory.at(3), memory.at(4));
 				}
 				else
 					myAssertPlus(false, pattern);
@@ -196,12 +219,6 @@ std::pair<std::vector<std::vector<Condition>>, std::vector<Condition>> parse(con
 		{
 		case 0:
 			if (input == "[") {
-				memory.push_back(Field::getParamString("w", blockCount));
-				memory.push_back(".at_start");
-				memory.push_back("=");
-				memory.push_back("*");
-				generateTmpCondition();
-				generateCondition();
 				status = 1;
 			}
 			else status = -1;
@@ -689,15 +706,13 @@ std::pair<std::vector<std::vector<Condition>>, std::vector<Condition>> parse(con
 		}
 		debugI(status);
 	}
+	myAssertPlus(status == 24, pattern);
 
-	memory.push_back(Field::getParamString("w", blockCount - 1));
-	memory.push_back(".at_end");
-	memory.push_back("=");
-	memory.push_back("*");
-	generateTmpCondition();
-	generateCondition();
+	std::vector<std::vector<Condition>> result;
+	generate(result, 0, std::vector<Condition>(), conditions);
 
 	std::vector<Condition> paramGetter;
+	paramGetter.emplace_back(pattern, rhs, "");
 	if (rhs.empty()) {
 		paramGetter.reserve(blockCount);
 		for (size_t i = 0; i < blockCount; ++i)
@@ -722,8 +737,6 @@ std::pair<std::vector<std::vector<Condition>>, std::vector<Condition>> parse(con
 		else
 			myAssertPlus(false, rhs);
 	}
-	paramGetter.emplace_back(pattern, rhs, "");
-	myAssertPlus(status == 24, pattern);
 
 #ifdef main_debug_output
 	for (auto&& conditionPart : conditions) {
@@ -742,12 +755,9 @@ std::pair<std::vector<std::vector<Condition>>, std::vector<Condition>> parse(con
 		puts("&");
 	}
 #endif // main_debug_output
-
-	std::vector<std::vector<Condition>> result;
-	generate(result, 0, std::vector<Condition>(), conditions);
+	
 	return std::make_pair(result, paramGetter);
 }
-
 
 Net getNet() {
 	Net net;
@@ -803,46 +813,24 @@ std::unordered_map<std::string, std::vector<std::string>> readWordFile(const str
 void addSentence(Net& net, std::vector<std::string> wordVector, std::vector<std::string> posVector) {
 	myAssert(wordVector.size() == posVector.size());
 
-	std::unordered_set<size_t> startIndex, endIndex;
 	for (size_t i = 0, offset = 0; i < wordVector.size(); ++i) {
-		size_t len = CStringOp::getSequenceCnt(wordVector.at(i));
-		std::string name = CStringOp::ToString(offset) + "-" + CStringOp::ToString(offset + len);
+		std::string name = CStringOp::ToString(i) + "-" + CStringOp::ToString(i + 1);
+		auto&& word = wordVector.at(i);
 
 		net.addWME({ name, ".pos", posVector.at(i) });
-		startIndex.insert(offset);
-		endIndex.insert(offset + len);
+		net.addWME({ name, ".word", word });
+		net.addWME({ name, ".len", CStringOp::getSequenceCnt(word) });
+		net.addWME({ name, ".offset_start", i });
+		net.addWME({ name, ".offset_end", i + 1 });
 
-		offset += len;
-	}
-
-	std::vector<std::string> wordCharVector;
-	std::string sentence;
-	for (auto&& word : wordVector)
-		sentence += word;
-	wordCharVector = CStringOp::getSequence(sentence);
-
-	auto&& dict = readWordFile();
-	for (size_t l = 0; l < wordCharVector.size(); ++l) {
-		std::string word, ls = CStringOp::ToString(l);
-		for (size_t r = l + 1; r <= min(wordCharVector.size(), l + 5); ++r) {
-			word += wordCharVector.at(r - 1);
-			std::string name = ls + "-" + CStringOp::ToString(r);
-			net.addWME({ name, ".word", word });
-			net.addWME({ name, ".len", r - l });
-			net.addWME({ name, ".offset_start", l });
-			net.addWME({ name, ".offset_end", r });
-			if (startIndex.count(l) > 0)
-				net.addWME({ name, ".at_start", "true" });
-			if (endIndex.count(r) > 0)
-				net.addWME({ name, ".at_end", "true" });
-			if (dict.count(word) > 0)
-				for (auto&& c : dict.find(word)->second)
-					net.addWME({ name, ".in", c });
-		}
+		auto&& dict = readWordFile();
+		if (dict.count(word) > 0)
+			for (auto&& c : dict.find(word)->second)
+				net.addWME({ name, ".in", c });
 	}
 }
 void test_4() {
-	Net net = getNet();
+	net = getNet();
 	std::ifstream fin(R"(oov_pattern.txt)");
 	myAssert(!fin.fail());
 	std::string line;
@@ -851,15 +839,7 @@ void test_4() {
 	CLog::write("build network", "start");
 	while (!fin.eof()) {
 		getline(fin, line);
-		if (line.empty() || CStringOp::startsWith(line, "//"))
-			continue;
-		CStringOp::replaceAll(line, " ", "");
-		CStringOp::replaceAll(line, "\t", "");
-		std::vector<std::string> parts = CStringOp::split(line, "->");
-		parts.push_back("");
-
-		auto&& pair = parse(parts.at(0), parts.at(1));
-
+		auto&& pair = parse(line);
 		for (auto&& conditions : pair.first) {
 			net.addProduction(conditions, pair.second);
 		}
@@ -874,20 +854,19 @@ void test_4() {
 	std::string sentence;
 	for (auto&& w : wordVector)
 		sentence += w;
-	auto&& vec = CStringOp::getSequence(sentence);
 	addSentence(net, wordVector, posVector);
 
 	CLog::write("invoke", "start");
 	auto&& infos = net.invoke();
 	for (auto&& info : infos) {
-		for (size_t i = 0; i + 1 < info.size(); ++i) {
+		for (size_t i = 1; i < info.size(); ++i) {
 			auto&& range = info.at(i).get(Field::id);
 			auto&& parts = CStringOp::split(range, "-");
 			size_t start = CStringOp::FromString<size_t>(parts.at(0));
 			size_t end = CStringOp::FromString<size_t>(parts.at(1));
 			std::string str;
 			for (size_t i = start; i < end; ++i)
-				str += vec.at(i);
+				str += wordVector.at(i) + "/" + posVector.at(i) + " ";
 			info.at(i).set(Field::id, str);
 		}
 		VectorPrinter::print(info, 0);
@@ -900,13 +879,7 @@ void test_for_debug() {
 
 	// input
 	std::string pattern = "[w1.pos=d][w2.pos=v][w3.pos=ud]";
-	auto&& it = parse(pattern, "");
-	for (auto&& conditions : it.first) {
-		net.addProduction(conditions, it.second);
-		for (auto&& c : conditions)
-			c.print(0);
-		puts("----------------------------------");
-	}
+	parse(pattern);
 
 	addSentence(net, {
 		"毛泽东", "可谓", "是", "奋斗", "了", "一", "生", "，", "子女", "们", "却", "死", "得", "死", "，", "丢", "的", "丢", " ，", "晚年", "的", "毛泽东", "可谓", "是", "十分", "孤独", "，", "为", "大家", "创造", "了", "新", "生活", "，", "自己", "却", "不", "能", "享受", "天伦之乐", "。"

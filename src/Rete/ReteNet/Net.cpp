@@ -77,10 +77,13 @@ std::vector<ConditionVector> Net::invoke() {
 		//node->getOutput();
 		//node->print();
 	}
+	return ret;
+}
+
+void Net::clearStatus() {
 	for (auto&& node : resultNodes) {
 		node->clearStatus();
 	}
-	return ret;
 }
 
 void Net::addWME(const WME & wme) {

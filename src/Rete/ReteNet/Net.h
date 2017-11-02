@@ -53,6 +53,7 @@ public:
 	Net();
 	void addProduction(const ConditionVector& conditions, const std::vector<Condition>& getter);
 	std::vector<ConditionVector> invoke();
+	void clearStatus();
 	void addWME(const WME& wme);
 	void addFunction(const std::string& key, TestAtTokenFilterNode::JudgeFunctionType judgeFunction);
 };
