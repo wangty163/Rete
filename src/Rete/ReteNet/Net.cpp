@@ -74,8 +74,6 @@ std::vector<ConditionVector> Net::invoke() {
 	for (auto&& node : resultNodes) {
 		auto&& infos = node->getOutputInfos();
 		std::copy(infos.begin(), infos.end(), std::back_inserter(ret));
-		//node->getOutput();
-		//node->print();
 	}
 	return ret;
 }

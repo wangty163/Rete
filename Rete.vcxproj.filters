@@ -70,6 +70,9 @@
     <ClCompile Include="src\StringOp.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\COOVRecognitionByPattern.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Rete\AlphaPart\AlphaMemory.h">
@@ -130,6 +133,9 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\StringOp.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\COOVRecognitionByPattern.h">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>

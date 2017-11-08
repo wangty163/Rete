@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\COOVRecognitionByPattern.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\Rete\AlphaPart\AlphaMemory.cpp" />
     <ClCompile Include="src\Rete\BetaPart\BetaNode.cpp" />
@@ -38,6 +39,7 @@
     <ClCompile Include="src\StringOp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\COOVRecognitionByPattern.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\PublicDefine.h" />
     <ClInclude Include="src\Rete\AlphaPart\AlphaMemory.h" />

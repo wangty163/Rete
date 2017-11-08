@@ -779,4 +779,12 @@ std::string CStringOp::repeat(const std::string & str, int repeatCnt)
 	return ret;
 }
 
-
+bool CStringOp::isChinese(const std::string & str) {
+	return !str.empty() && !isascii((unsigned char)str.front());
+}
+bool CStringOp::isDigit(const std::string& str) {
+	return !str.empty() && isdigit((unsigned char)str.front());
+}
+bool CStringOp::isAlpha(const std::string& str) {
+	return !str.empty() && isalpha((unsigned char)str.front());
+}

@@ -86,6 +86,9 @@ namespace CStringOp
 
 	// 将str重复若干次返回
 	std::string repeat(const std::string& str, int repeatCnt);
+	bool isChinese(const std::string& str);
+	bool isDigit(const std::string& str);
+	bool isAlpha(const std::string& str);
 
 	/*	编码相关	*/
 	//gbk转utf8
