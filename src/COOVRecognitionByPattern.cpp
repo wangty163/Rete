@@ -57,7 +57,6 @@ std::pair<std::vector<ConditionVector>, ConditionVector> COOVRecognitionByPatter
 	std::vector<std::vector<std::vector<Condition>>> conditions;
 	std::vector<std::vector<Condition>> tmpConditions;
 	std::vector<std::string> memory;
-	Condition::Type type = Condition::positive;
 	// 规则中出现的变量名 -> 真正使用的变量名
 	std::unordered_map<std::string, std::string> paramMapping;
 	int blockCount = 0, tmpParamCount = 0;
@@ -174,7 +173,7 @@ std::pair<std::vector<ConditionVector>, ConditionVector> COOVRecognitionByPatter
 	};
 	auto&& normalizeParam = [&memory, &paramMapping, &blockCount, &pattern]() {
 		std::string& paramName = memory.back();
-		std::string& paramString = Field::getParamString("w", blockCount);
+		auto&& paramString = Field::getParamString("w", blockCount);
 		myAssertPlus(paramMapping.count(paramName) == 0 ||
 			paramMapping[paramName] == paramString, pattern);
 		paramMapping.insert({ paramName, paramString });
@@ -886,7 +885,6 @@ vecWords：词语序列
 vecPos：词性序列
 *返回值：匹配成功返回true,否则返回false
 */
-#pragma optimize( "", off )
 bool COOVRecognitionByPattern::RecognitionByOOVPattern(vector<MatchResultNode>&vecResult, const std::vector<std::string>& words, const std::vector<std::string>& poses) {
 	vecResult.clear();
 

@@ -9,7 +9,9 @@
 #include "../PublicDefine.h"
 
 void test() {
+	CLog::write("Init", "start");
 	COOVRecognitionByPattern::Init();
+	CLog::write("Init", "end");
 
 	COOVRecognitionByPattern rc;
 	std::vector<MatchResultNode> result;
