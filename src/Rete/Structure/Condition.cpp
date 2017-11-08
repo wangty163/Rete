@@ -31,3 +31,10 @@ void Condition::print(int level) const {
 		<< fields.at(1)
 		<< "," << fields.at(2) << std::endl;
 }
+
+bool Condition::operator==(const Condition & rhs) const {
+	return (fields.at(0) == rhs.fields.at(0)
+		&& fields.at(1) == rhs.fields.at(1)
+		&& fields.at(2) == rhs.fields.at(2)
+		&& type == rhs.type);
+}

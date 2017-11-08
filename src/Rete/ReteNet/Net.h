@@ -24,10 +24,12 @@ namespace std {
 	template<>
 	struct hash<StructForHash> {
 		std::size_t operator()(const StructForHash& obj) const {
-			return hash<ReteNodePtr>()(obj.parent)
-				^ hash<AlphaMemoryPtr>()(obj.alphaMemory)
-				^ hash<ParamTestNodeVector>()(obj.tests)
-				^ hash<Condition>()(obj.c);
+			size_t ret = 2166136261;
+			ret = (ret * 16777619) ^ hash<ReteNode>()(*obj.parent);
+			ret = (ret * 16777619) ^ hash<AlphaMemory>()(*obj.alphaMemory);
+			ret = (ret * 16777619) ^ hash<ParamTestNodeVector>()(obj.tests);
+			ret = (ret * 16777619) ^ hash<Condition>()(obj.c);
+			return ret;
 		}
 	};
 }

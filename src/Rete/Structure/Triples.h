@@ -16,7 +16,6 @@ public:
 	Triples(const ID& id, const Attr& attr, const Value& value);
 	void set(Field::Name fieldName, const std::string& v);
 	const std::string& get(Field::Name fieldName) const;
-	bool operator== (const Triples &rhs) const;
 	void print(int level) const;
 };
 

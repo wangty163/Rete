@@ -23,6 +23,6 @@ namespace Field
 
 
 template<typename T>
-std::string Field::getParamString(const T & paramName) {
+inline std::string Field::getParamString(const T & paramName) {
 	return prefixChar + CStringOp::ToString(paramName);
 }

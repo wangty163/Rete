@@ -34,11 +34,6 @@ const std::string & Triples::get(Field::Name fieldName) const {
 	return fields.at(index);
 }
 
-bool Triples::operator==(const Triples & rhs) const {
-	return (fields.at(0) == rhs.fields.at(0)
-		&& fields.at(1) == rhs.fields.at(1)
-		&& fields.at(2) == rhs.fields.at(2));
-}
 
 void Triples::print(int level) const {
 	std::string prefix = CStringOp::repeat("\t", level);

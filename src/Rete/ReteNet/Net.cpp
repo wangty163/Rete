@@ -64,6 +64,7 @@ ReteNodePtr Net::buildOrShareNetworkForConditions(ReteNodePtr parent
 Net::Net() : dummyTopNode(ReteNodePtr((ReteNode*)(new DummyTopNode()))) {
 }
 
+size_t i = 0;
 void Net::addProduction(const ConditionVector & conditions, const std::vector<Condition>& getter) {
 	auto&& curentNode = buildOrShareNetworkForConditions(dummyTopNode, conditions, {});
 	resultNodes.insert(ProductionNodePtr(new ProductionNode(curentNode, conditions, getter)));
@@ -105,10 +106,9 @@ void Net::addFunction(const std::string & key, TestAtTokenFilterNode::JudgeFunct
 	testAtTokenFilterNode.insertJudgeFunction(key, judgeFunction);
 }
 
-bool StructForHash::operator==(const StructForHash & rhs) const
-{
-	return parent == rhs.parent && 
+bool StructForHash::operator==(const StructForHash & rhs) const {
+	return *parent == *rhs.parent && 
 		tests == rhs.tests && 
-		alphaMemory == rhs.alphaMemory && 
+		*alphaMemory == *rhs.alphaMemory && 
 		c == rhs.c;
 }

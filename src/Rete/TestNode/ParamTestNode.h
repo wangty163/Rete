@@ -28,17 +28,19 @@ namespace std {
 	template<>
 	struct hash<ParamTestNode> {
 		size_t operator() (const ParamTestNode& node) const {
-			return hash<int>()(node.fieldOfArg1)
-				^ hash<size_t>()(node.conditionNumberOfArg2)
-				^ hash<int>()(node.fieldOfArg2);
+			size_t ret = 2166136261;
+			ret = (ret * 16777619) ^ hash<int>()(node.fieldOfArg1);
+			ret = (ret * 16777619) ^ hash<size_t>()(node.conditionNumberOfArg2);
+			ret = (ret * 16777619) ^ hash<int>()(node.fieldOfArg2);
+			return ret;
 		}
 	};
 	template<>
 	struct hash<ParamTestNodeVector> {
 		size_t operator() (const ParamTestNodeVector& nodes) const {
-			size_t ret = 0;
+			size_t ret = 2166136261;
 			for (auto&& node : nodes)
-				ret ^= hash<ParamTestNode>()(node);
+				ret = (ret * 16777619) ^ hash<ParamTestNode>()(node);
 			return ret;
 		}
 	};

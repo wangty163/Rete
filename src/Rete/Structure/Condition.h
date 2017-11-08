@@ -18,6 +18,7 @@ public:
 	Condition getIndex() const;
 	const Condition::Type& getType() const;
 	void print(int level) const;
+	bool operator==(const Condition& rhs) const;
 protected:
 	Type type;
 };
@@ -28,9 +29,11 @@ namespace std {
 	template <>
 	struct hash<Condition> {
 		size_t operator()(const Condition& c) const {
-			return (hash<string>()(c.get(Field::id))
-				^ (hash<string>()(c.get(Field::attr)) >> 1)
-				^ (hash<string>()(c.get(Field::value)) << 1));
+			size_t ret = 2166136261;
+			ret = (ret * 16777619) ^ hash<string>()(c.get(Field::id));
+			ret = (ret * 16777619) ^ hash<string>()(c.get(Field::attr));
+			ret = (ret * 16777619) ^ hash<string>()(c.get(Field::value));
+			return ret;
 		}
 	};
 }

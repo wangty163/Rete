@@ -25,3 +25,19 @@ public:
 };
 
 using ProductionNodePtr = std::shared_ptr<ProductionNode>;
+
+namespace std {
+	template<>
+	struct hash<ProductionNode> {
+		size_t operator()(const ProductionNode& node) const {
+			return hash<size_t>()(node.serialNumber);
+		}
+	};
+
+	template<>
+	struct hash<ProductionNodePtr> {
+		size_t operator()(const ProductionNodePtr& ptr) const {
+			return hash<ProductionNode>()(*ptr);
+		}
+	};
+};

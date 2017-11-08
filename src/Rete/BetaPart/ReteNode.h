@@ -13,3 +13,12 @@ public:
 };
 
 using ReteNodePtr = std::shared_ptr<ReteNode>;
+
+namespace std {
+	template<>
+	struct hash<ReteNode> {
+		size_t operator()(const ReteNode& node) const {
+			return hash<size_t>()(node.serialNumber);
+		}
+	};
+}
