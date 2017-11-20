@@ -4,21 +4,20 @@
 
 #include "../Structure/Node.h"
 #include "../Structure/WME.h"
+#include "../BetaPart/BetaNode.h"
+#include "../../HashSupport.h"
 
-class AlphaMemory : public Node<WMEVector> {
+class BetaNode;
+class AlphaMemory : public Node<WMESet> {
 public:
 	void addWME(const WME& wme);
-	const WMEVector& getOutput() override;
 	void clearStatus() override;
+	void addToChildren(const std::shared_ptr<BetaNode>& ptr);
+protected:
+	using BetaNodePtr = shared_ptr<BetaNode>;
+	std::vector<BetaNodePtr> children;
 };
 
 using AlphaMemoryPtr = std::shared_ptr<AlphaMemory>;
 
-namespace std {
-	template<>
-	struct hash<AlphaMemory> {
-		size_t operator()(const AlphaMemory& am) const {
-			return hash<size_t>()(am.serialNumber);
-		}
-	};
-}
+DEFINE_STD_HASH_SPECIALIZATION(AlphaMemory);

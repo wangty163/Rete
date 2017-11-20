@@ -13,41 +13,32 @@
 #include "../TestNode/ParamTestNode.h"
 
 struct StructForHash {
-	ReteNodePtr parent;
+	BetaNodePtr parent;
 	AlphaMemoryPtr alphaMemory;
 	ParamTestNodeVector tests;
 	Condition c;
+
 	bool operator== (const StructForHash& rhs) const;
+	size_t hashCode() const;
 };
 
-namespace std {
-	template<>
-	struct hash<StructForHash> {
-		std::size_t operator()(const StructForHash& obj) const {
-			size_t ret = 2166136261;
-			ret = (ret * 16777619) ^ hash<ReteNode>()(*obj.parent);
-			ret = (ret * 16777619) ^ hash<AlphaMemory>()(*obj.alphaMemory);
-			ret = (ret * 16777619) ^ hash<ParamTestNodeVector>()(obj.tests);
-			ret = (ret * 16777619) ^ hash<Condition>()(obj.c);
-			return ret;
-		}
-	};
-}
+DEFINE_STD_HASH_SPECIALIZATION(StructForHash);
 
 class Net {
-	ReteNodePtr dummyTopNode;
+	BetaNodePtr dummyTopNode;
+	Agent agent;
 	TestAtTokenFilterNode testAtTokenFilterNode;
 	std::unordered_map<Condition, AlphaMemoryPtr> conditionToAlphaMemory;
-	std::unordered_map<StructForHash, ReteNodePtr> dict;
+	std::unordered_map<StructForHash, BetaNodePtr> dict;
 
 	ParamTestNodeVector getTestsFromCondition(Condition c
 		, const ConditionVector& condsHigherUp);
-	ReteNodePtr buildOrShareJoinNode(ReteNodePtr parent, AlphaMemoryPtr am
+	BetaNodePtr buildOrShareJoinNode(BetaNodePtr parent, AlphaMemoryPtr am
 		, const ParamTestNodeVector& tests, const Condition& c);
-	ReteNodePtr buildOrShareTokenFilterNode(ReteNodePtr parent, AlphaMemoryPtr am
+	BetaNodePtr buildOrShareTokenFilterNode(BetaNodePtr parent, AlphaMemoryPtr am
 		, const ParamTestNodeVector & tests, const Condition& c);
 	AlphaMemoryPtr buildOrShareAlphaMemory(const Condition& c);
-	ReteNodePtr buildOrShareNetworkForConditions(ReteNodePtr parent
+	BetaNodePtr buildOrShareNetworkForConditions(BetaNodePtr parent
 		, const ConditionVector& conds, ConditionVector condsHigherUp);
 
 	std::unordered_set<ProductionNodePtr> resultNodes;

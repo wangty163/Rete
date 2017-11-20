@@ -1,13 +1,21 @@
 #include "DummyTopNode.h"
 
+#include "../../PublicDefine.h"
+
 DummyTopNode::DummyTopNode()
-	: ReteNode(true) {
-	output.push_back({});
+	: BetaNode(nullptr, nullptr, {}) {
+	output.insert(Token());
 }
 
 void DummyTopNode::clearStatus() {
+	for (auto&& child : children)
+		child->clearStatus();
 }
 
-const TokenVector & DummyTopNode::getOutput() {
-	return output;
+void DummyTopNode::leftActive(const Token & token) {
+	myAssert(false);
+}
+
+void DummyTopNode::rightActive(const WME & wme) {
+	myAssert(false);
 }

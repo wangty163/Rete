@@ -21,25 +21,28 @@
   <ItemGroup>
     <ClCompile Include="src\COOVRecognitionByPattern.cpp" />
     <ClCompile Include="src\Log.cpp" />
+    <ClCompile Include="src\PublicDefine.cpp" />
     <ClCompile Include="src\Rete\AlphaPart\AlphaMemory.cpp" />
     <ClCompile Include="src\Rete\BetaPart\BetaNode.cpp" />
     <ClCompile Include="src\Rete\BetaPart\DummyTopNode.cpp" />
     <ClCompile Include="src\Rete\BetaPart\JoinNode.cpp" />
     <ClCompile Include="src\Rete\BetaPart\ProductionNode.cpp" />
-    <ClCompile Include="src\Rete\BetaPart\ReteNode.cpp" />
     <ClCompile Include="src\Rete\BetaPart\TokenFilterNode.cpp" />
     <ClCompile Include="src\Rete\main.cpp" />
+    <ClCompile Include="src\Rete\ReteNet\Agent.cpp" />
     <ClCompile Include="src\Rete\ReteNet\Net.cpp" />
     <ClCompile Include="src\Rete\Structure\Condition.cpp" />
     <ClCompile Include="src\Rete\Structure\Field.cpp" />
     <ClCompile Include="src\Rete\Structure\Token.cpp" />
     <ClCompile Include="src\Rete\Structure\Triples.cpp" />
+    <ClCompile Include="src\Rete\Structure\WME.cpp" />
     <ClCompile Include="src\Rete\TestNode\ParamTestNode.cpp" />
     <ClCompile Include="src\Rete\TestNode\TestAtTokenFilterNode.cpp" />
     <ClCompile Include="src\StringOp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\COOVRecognitionByPattern.h" />
+    <ClInclude Include="src\HashSupport.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\PublicDefine.h" />
     <ClInclude Include="src\Rete\AlphaPart\AlphaMemory.h" />
@@ -47,8 +50,8 @@
     <ClInclude Include="src\Rete\BetaPart\DummyTopNode.h" />
     <ClInclude Include="src\Rete\BetaPart\JoinNode.h" />
     <ClInclude Include="src\Rete\BetaPart\ProductionNode.h" />
-    <ClInclude Include="src\Rete\BetaPart\ReteNode.h" />
     <ClInclude Include="src\Rete\BetaPart\TokenFilterNode.h" />
+    <ClInclude Include="src\Rete\ReteNet\Agent.h" />
     <ClInclude Include="src\Rete\ReteNet\Net.h" />
     <ClInclude Include="src\Rete\Structure\Condition.h" />
     <ClInclude Include="src\Rete\Structure\Field.h" />

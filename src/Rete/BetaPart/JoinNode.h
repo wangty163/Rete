@@ -7,9 +7,10 @@
 
 class JoinNode : public BetaNode {
 public:
-	JoinNode(ReteNodePtr leftParent, AlphaMemoryPtr rightParent
+	JoinNode(BetaNodePtr leftParent, AlphaMemoryPtr rightParent
 		, const ParamTestNodeVector& tests, const Condition& c);
-	const TokenVector& getOutput() override;
+	void leftActive(const Token& token) override;
+	void rightActive(const WME& wme) override;
 private:
 	bool isPositive;
 };

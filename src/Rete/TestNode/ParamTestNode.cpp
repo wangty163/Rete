@@ -14,6 +14,14 @@ bool ParamTestNode::operator==(const ParamTestNode & rhs) const {
 		&& fieldOfArg2 == rhs.fieldOfArg2;
 }
 
+size_t ParamTestNode::hashCode() const {
+	size_t ret = 2166136261;
+	ret = (ret * 16777619) ^ hash<int>()(fieldOfArg1);
+	ret = (ret * 16777619) ^ hash<size_t>()(conditionNumberOfArg2);
+	ret = (ret * 16777619) ^ hash<int>()(fieldOfArg2);
+	return ret;
+}
+
 bool ParamTestNode::performTest(const Token & token, const WME & wme) const {
 	return token.at(conditionNumberOfArg2).get(fieldOfArg2) == wme.get(fieldOfArg1);
 }

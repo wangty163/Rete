@@ -5,9 +5,10 @@
 
 class TokenFilterNode : public BetaNode {
 public:
-	TokenFilterNode(ReteNodePtr leftParent, AlphaMemoryPtr rightParent,
+	TokenFilterNode(BetaNodePtr leftParent, AlphaMemoryPtr rightParent,
 		const ParamTestNodeVector & tests, const Condition& c, TestAtTokenFilterNode& testAtTokenFilterNode);
-	const TokenVector& getOutput() override;
+	void leftActive(const Token& token) override;
+	void rightActive(const WME& wme) override;
 private:
 	Condition c;
 	bool isPositive;

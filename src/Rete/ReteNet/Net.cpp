@@ -11,12 +11,14 @@ ParamTestNodeVector Net::getTestsFromCondition(Condition c, const ConditionVecto
 	return ret;
 }
 
-ReteNodePtr Net::buildOrShareJoinNode(ReteNodePtr parent, AlphaMemoryPtr am
+BetaNodePtr Net::buildOrShareJoinNode(BetaNodePtr parent, AlphaMemoryPtr am
 	, const ParamTestNodeVector & tests, const Condition& c) {
 	StructForHash node = { parent, am, tests, c };
 	auto&& it = dict.find(node);
 	if (it == dict.end()) {
-		auto&& ret = ReteNodePtr((ReteNode*)new JoinNode(parent, am, tests, c));
+		auto&& ret = BetaNodePtr(new JoinNode(parent, am, tests, c));
+		parent->addToChildren(ret);
+		am->addToChildren(ret);
 		dict.insert(std::make_pair(node, ret));
 		return ret;
 	}
@@ -24,12 +26,14 @@ ReteNodePtr Net::buildOrShareJoinNode(ReteNodePtr parent, AlphaMemoryPtr am
 		return it->second;
 }
 
-ReteNodePtr Net::buildOrShareTokenFilterNode(ReteNodePtr parent, AlphaMemoryPtr am
+BetaNodePtr Net::buildOrShareTokenFilterNode(BetaNodePtr parent, AlphaMemoryPtr am
 	, const ParamTestNodeVector & tests, const Condition& c) {
 	StructForHash node = { parent, am, tests, c };
 	auto&& it = dict.find(node);
 	if (it == dict.end()) {
-		auto&& ret = ReteNodePtr(new TokenFilterNode(parent, am, tests, c, testAtTokenFilterNode));
+		auto&& ret = BetaNodePtr(new TokenFilterNode(parent, am, tests, c, testAtTokenFilterNode));
+		parent->addToChildren(ret);
+		am->addToChildren(ret);
 		dict.insert(std::make_pair(node, ret));
 		return ret;
 	}
@@ -45,7 +49,7 @@ AlphaMemoryPtr Net::buildOrShareAlphaMemory(const Condition & c) {
 	return conditionToAlphaMemory[index];
 }
 
-ReteNodePtr Net::buildOrShareNetworkForConditions(ReteNodePtr parent
+BetaNodePtr Net::buildOrShareNetworkForConditions(BetaNodePtr parent
 	, const ConditionVector & conds, ConditionVector condsHigherUp) {
 	for (auto&& c : conds) {
 		auto&& tests = getTestsFromCondition(c, condsHigherUp);
@@ -61,28 +65,30 @@ ReteNodePtr Net::buildOrShareNetworkForConditions(ReteNodePtr parent
 	return parent;
 }
 
-Net::Net() : dummyTopNode(ReteNodePtr((ReteNode*)(new DummyTopNode()))) {
+Net::Net() : dummyTopNode(BetaNodePtr((new DummyTopNode()))) {
 }
 
 size_t i = 0;
 void Net::addProduction(const ConditionVector & conditions, const std::vector<Condition>& getter) {
 	auto&& curentNode = buildOrShareNetworkForConditions(dummyTopNode, conditions, {});
-	resultNodes.insert(ProductionNodePtr(new ProductionNode(curentNode, conditions, getter)));
+	auto&& productionNodePtr = ProductionNodePtr(new ProductionNode(agent, curentNode, conditions, getter));
+	curentNode->addToChildren(productionNodePtr);
+	resultNodes.insert(productionNodePtr);
 }
 
 std::vector<ConditionVector> Net::invoke() {
-	std::vector<ConditionVector> ret;
-	for (auto&& node : resultNodes) {
-		auto&& infos = node->getOutputInfos();
-		std::copy(infos.begin(), infos.end(), std::back_inserter(ret));
-	}
-	return ret;
+	return agent.getOutput();
 }
 
 void Net::clearStatus() {
-	for (auto&& node : resultNodes) {
-		node->clearStatus();
+	for (auto&& pair : conditionToAlphaMemory) {
+		pair.second->clearStatus();
 	}
+	dummyTopNode->clearStatus();
+	agent.clearStatus();
+	//for (auto&& node : resultNodes) {
+	//	node->clearStatus();
+	//}
 }
 
 void Net::addWME(const WME & wme) {
@@ -111,4 +117,13 @@ bool StructForHash::operator==(const StructForHash & rhs) const {
 		tests == rhs.tests && 
 		*alphaMemory == *rhs.alphaMemory && 
 		c == rhs.c;
+}
+
+size_t StructForHash::hashCode() const {
+	size_t ret = 2166136261;
+	ret = (ret * 16777619) ^ hash<BetaNode>()(*parent);
+	ret = (ret * 16777619) ^ hash<AlphaMemory>()(*alphaMemory);
+	ret = (ret * 16777619) ^ hash<ParamTestNodeVector>()(tests);
+	ret = (ret * 16777619) ^ hash<Condition>()(c);
+	return ret;
 }

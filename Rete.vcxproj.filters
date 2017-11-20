@@ -36,9 +36,6 @@
     <ClCompile Include="src\Rete\BetaPart\ProductionNode.cpp">
       <Filter>BetaPart</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rete\BetaPart\ReteNode.cpp">
-      <Filter>BetaPart</Filter>
-    </ClCompile>
     <ClCompile Include="src\Rete\BetaPart\TokenFilterNode.cpp">
       <Filter>BetaPart</Filter>
     </ClCompile>
@@ -73,6 +70,15 @@
     <ClCompile Include="src\COOVRecognitionByPattern.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\PublicDefine.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rete\ReteNet\Agent.cpp">
+      <Filter>ReteNet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rete\Structure\WME.cpp">
+      <Filter>Structure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Rete\AlphaPart\AlphaMemory.h">
@@ -88,9 +94,6 @@
       <Filter>BetaPart</Filter>
     </ClInclude>
     <ClInclude Include="src\Rete\BetaPart\ProductionNode.h">
-      <Filter>BetaPart</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rete\BetaPart\ReteNode.h">
       <Filter>BetaPart</Filter>
     </ClInclude>
     <ClInclude Include="src\Rete\BetaPart\TokenFilterNode.h">
@@ -129,14 +132,20 @@
     <ClInclude Include="src\Log.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\PublicDefine.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="src\StringOp.h">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\COOVRecognitionByPattern.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PublicDefine.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\HashSupport.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rete\ReteNet\Agent.h">
+      <Filter>ReteNet</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -17,6 +17,7 @@ Condition Condition::getIndex() const {
 		ret.fields.at(1) = Condition::arbitraryString;
 	if (!ret.isConstTest(Field::value))
 		ret.fields.at(2) = Condition::arbitraryString;
+	ret.type = Type::positive;
 	return ret;
 }
 
@@ -33,8 +34,12 @@ void Condition::print(int level) const {
 }
 
 bool Condition::operator==(const Condition & rhs) const {
-	return (fields.at(0) == rhs.fields.at(0)
-		&& fields.at(1) == rhs.fields.at(1)
-		&& fields.at(2) == rhs.fields.at(2)
-		&& type == rhs.type);
+	return Triples::operator==(rhs) && type == rhs.type;
+}
+
+size_t Condition::hashCode() const {
+	size_t ret = 0;
+	ret = (ret * 16777619) ^ Triples::hashCode();
+	ret = (ret * 16777619) ^ std::hash<Type>()(type);
+	return ret;
 }

@@ -1,10 +1,11 @@
 #pragma once
 
-#include "ReteNode.h"
+#include "BetaNode.h"
 
-struct DummyTopNode : public ReteNode {
+struct DummyTopNode : public BetaNode {
 public:
 	DummyTopNode();
 	void clearStatus() override;
-	const TokenVector& getOutput() override;
+	void leftActive(const Token& token) override;
+	void rightActive(const WME& wme) override;
 };

@@ -38,8 +38,9 @@ void ProductionNode::buildIndexer() {
 	myAssert(dict.empty());
 }
 
-ProductionNode::ProductionNode(ReteNodePtr leftParent, const ConditionVector & conds, const ConditionVector& infoGetter)
-	: ReteNode(false), leftParent(leftParent), conds(conds), infoGetter(infoGetter) {
+ProductionNode::ProductionNode(Agent& agent, BetaNodePtr leftParent,
+	const ConditionVector & conds, const ConditionVector& infoGetter)
+	: BetaNode(leftParent, nullptr, {}), agent(agent), conds(conds), infoGetter(infoGetter) {
 	buildIndexer();
 }
 
@@ -52,55 +53,57 @@ void ProductionNode::print(int level) const {
 	}
 }
 
-const ConditionVector & ProductionNode::getConds() {
-	return conds;
+//TokenVector & ProductionNode::getOutput() {
+//	if (!isReadyForOutput) {
+//		output = leftParent->getOutput();
+//		isReadyForOutput = true;
+//
+//
+//		//if (!output.empty()) {
+//		//	ConditionVector condsHigherUp;
+//		//	for (size_t i = 0; i < conds.size(); ++i) {
+//		//		auto&& c = conds.at(i);
+//		//		if (c.getType() == Condition::negetive) {
+//		//			for (auto&& test : ParamTestNode::generate(c, conds)) {
+//		//				for (size_t j = 0; j < output.size(); ++j) {
+//		//					for (auto&& fieldName : { Field::id, Field::attr, Field::value }) {
+//		//						output.at(j).at(i).set(fieldName, c.get(fieldName));
+//		//					}
+//		//					output.at(j).at(i).set(test->fieldOfArg1
+//		//						, output.at(j).at(test->conditionNumberOfArg2).get(test->fieldOfArg2));
+//		//				}
+//		//			}
+//		//			for (size_t j = 0; j < output.size(); ++j) {
+//		//				output.at(j).at(i).set(Field::attr, c.get(Field::attr) + "_neq");
+//		//			}
+//		//		}
+//		//	}
+//		//}
+//	}
+//	return output;
+//}
+
+void ProductionNode::leftActive(const Token & token) {
+	agent.addToOutput(token, getOutputInfo(token));
 }
 
-TokenVector & ProductionNode::getOutput() {
-	if (!isReadyForOutput) {
-		output = leftParent->getOutput();
-		isReadyForOutput = true;
-
-
-		//if (!output.empty()) {
-		//	ConditionVector condsHigherUp;
-		//	for (size_t i = 0; i < conds.size(); ++i) {
-		//		auto&& c = conds.at(i);
-		//		if (c.getType() == Condition::negetive) {
-		//			for (auto&& test : ParamTestNode::generate(c, conds)) {
-		//				for (size_t j = 0; j < output.size(); ++j) {
-		//					for (auto&& fieldName : { Field::id, Field::attr, Field::value }) {
-		//						output.at(j).at(i).set(fieldName, c.get(fieldName));
-		//					}
-		//					output.at(j).at(i).set(test->fieldOfArg1
-		//						, output.at(j).at(test->conditionNumberOfArg2).get(test->fieldOfArg2));
-		//				}
-		//			}
-		//			for (size_t j = 0; j < output.size(); ++j) {
-		//				output.at(j).at(i).set(Field::attr, c.get(Field::attr) + "_neq");
-		//			}
-		//		}
-		//	}
-		//}
-	}
-	return output;
+void ProductionNode::leftDeactive(const Token & token) {
+	BetaNode::leftDeactive(token);
+	agent.removeFromOutput(token);
 }
 
-void ProductionNode::clearStatus() {
-	if (isReadyForOutput) {
-		isReadyForOutput = false;
-		output.clear();
-		outputInfos.clear();
-		leftParent->clearStatus();
-	}
+void ProductionNode::rightActive(const WME & wme) {
+	myAssert(false);
 }
 
-std::vector<ConditionVector> ProductionNode::getOutputInfos() {
-	if (!isReadyForOutput) {
-		getOutput();
-		outputInfos.reserve(output.size());
-		for (auto&& token : output)
-			outputInfos.push_back(getOutputInfo(token));
-	}
-	return outputInfos;
+ProductionNodePtr::ProductionNodePtr(ProductionNode * ptr)
+	: std::shared_ptr<ProductionNode>(ptr) {
+}
+
+bool ProductionNodePtr::operator==(const ProductionNodePtr & rhs) const {
+	return *get() == *rhs;
+}
+
+size_t ProductionNodePtr::hashCode() const {
+	return get()->hashCode();
 }

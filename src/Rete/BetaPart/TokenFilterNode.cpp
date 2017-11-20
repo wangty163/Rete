@@ -3,7 +3,7 @@
 #include "../TestNode/TestAtTokenFilterNode.h"
 #include "../../PublicDefine.h"
 
-TokenFilterNode::TokenFilterNode(ReteNodePtr leftParent, AlphaMemoryPtr rightParent,
+TokenFilterNode::TokenFilterNode(BetaNodePtr leftParent, AlphaMemoryPtr rightParent,
 	const ParamTestNodeVector & tests, const Condition& c, TestAtTokenFilterNode& testAtTokenFilterNode)
 	: BetaNode(leftParent, rightParent, tests), c(c), testAtTokenFilterNode(testAtTokenFilterNode) {
 	switch (c.getType())
@@ -19,26 +19,43 @@ TokenFilterNode::TokenFilterNode(ReteNodePtr leftParent, AlphaMemoryPtr rightPar
 	}
 }
 
-const TokenVector & TokenFilterNode::getOutput() {
-	if (!isReadyForOutput) {
-		// Can Be Optimized
-		for (auto&& token : leftParent->getOutput()) {
-			for (auto&& test : tests) {
-				c.set(
-					test.fieldOfArg1, 
-					token.at(test.conditionNumberOfArg2).get(test.fieldOfArg2)
-				);
-			}
-			if ((isPositive ^ testAtTokenFilterNode.performTest(c)) == 0) {
-				output.push_back(token);
-				output.back().push_back({ 
-					c.get(Field::id), 
-					(isPositive ? "" : "~") + c.get(Field::attr),
-					c.get(Field::value)
-				});
-			}
-		}
-		isReadyForOutput = true;
+//const TokenVector & TokenFilterNode::getOutput() {
+//	if (!isReadyForOutput) {
+//		// Can Be Optimized
+//		for (auto&& token : leftParent->getOutput()) {
+//			for (auto&& test : tests) {
+//				c.set(
+//					test.fieldOfArg1, 
+//					token.at(test.conditionNumberOfArg2).get(test.fieldOfArg2)
+//				);
+//			}
+//			if ((isPositive ^ testAtTokenFilterNode.performTest(c)) == 0) {
+//				output.push_back(token);
+//				output.back().push_back({ 
+//					c.get(Field::id), 
+//					(isPositive ? "" : "~") + c.get(Field::attr),
+//					c.get(Field::value)
+//				});
+//			}
+//		}
+//		isReadyForOutput = true;
+//	}
+//	return output;
+//}
+
+void TokenFilterNode::leftActive(const Token & token) {
+	for (auto&& test : tests) {
+		c.set(test.fieldOfArg1, token.at(test.conditionNumberOfArg2).get(test.fieldOfArg2));
 	}
-	return output;
+	if ((isPositive ^ testAtTokenFilterNode.performTest(c)) == 0) {
+		addToOutput(token, { 
+			c.get(Field::id), 
+			(isPositive ? "" : "~") + c.get(Field::attr),
+			c.get(Field::value)
+		});
+	}
+}
+
+void TokenFilterNode::rightActive(const WME & wme) {
+	myAssert(false);
 }

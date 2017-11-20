@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../HashSupport.h"
+
 template <typename O>
 class Node {
 	static size_t count;
@@ -8,11 +10,11 @@ protected:
 public:
 	size_t serialNumber;
 	Node();
-	virtual const O& getOutput() = 0;
+	const O& getOutput();
 	virtual void clearStatus() = 0;
 
-	template<typename X>
-	bool operator==(const Node<X>& rhs) const;
+	bool operator==(const Node<O>& rhs) const;
+	size_t hashCode() const;
 };
 
 template <typename O>
@@ -24,7 +26,25 @@ inline Node<O>::Node() : serialNumber(count++) {
 }
 
 template<typename O>
-template<typename X>
-inline bool Node<O>::operator==(const Node<X>& rhs) const {
+inline const O & Node<O>::getOutput() {
+	return output;
+}
+
+template<typename O>
+inline bool Node<O>::operator==(const Node<O>& rhs) const {
 	return serialNumber == rhs.serialNumber;
+}
+
+template<typename O>
+inline size_t Node<O>::hashCode() const {
+	return std::hash<size_t>()(serialNumber);
+}
+
+namespace std {
+	template<typename O>
+	struct hash<Node<O>> {
+		size_t operator()(const Node<O>& node) const {
+			return node.hashCode();
+		}
+	};
 }

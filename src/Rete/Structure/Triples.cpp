@@ -40,3 +40,15 @@ void Triples::print(int level) const {
 	std::cout << prefix << fields.at(0) << "," << fields.at(1) << "," << fields.at(2)
 		<< std::endl;
 }
+
+bool Triples::operator==(const Triples & rhs) const {
+	return fields == rhs.fields;
+}
+
+size_t Triples::hashCode() const {
+	size_t ret = 2166136261;
+	ret = (ret * 16777619) ^ hash<string>()(get(Field::id));
+	ret = (ret * 16777619) ^ hash<string>()(get(Field::attr));
+	ret = (ret * 16777619) ^ hash<string>()(get(Field::value));
+	return ret;
+}

@@ -22,6 +22,11 @@ void test() {
 	}, poses = {
 		"m", "q", "n", "d", "v", "n", "w", "v", "v", "v", "r", "m", "q", "d", "v", "uj", "n", "ng", "w"
 	};
+	//std::vector<std::string> words = {
+	//	"Ã»", "³å", "µÄ"
+	//}, poses = {
+	//	"d", "v", "uj"
+	//};
 	for (size_t i = 0; i < 100; ++i) {
 		rc.RecognitionByOOVPattern(result, words, poses);
 	}
@@ -29,7 +34,7 @@ void test() {
 	for (auto&& nd : result) {
 		debugIII(nd.nBegin, nd.nEnd, nd.matchedPattern);
 	}
-	system("pause");
+	//system("pause");
 }
 
 int main() {
