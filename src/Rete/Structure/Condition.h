@@ -33,6 +33,7 @@ namespace std {
 			ret = (ret * 16777619) ^ hash<string>()(c.get(Field::id));
 			ret = (ret * 16777619) ^ hash<string>()(c.get(Field::attr));
 			ret = (ret * 16777619) ^ hash<string>()(c.get(Field::value));
+			ret = (ret * 16777619) ^ hash<Condition::Type>()(c.getType());
 			return ret;
 		}
 	};

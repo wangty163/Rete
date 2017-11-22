@@ -11,8 +11,7 @@ public:
 	virtual const O& getOutput() = 0;
 	virtual void clearStatus() = 0;
 
-	template<typename X>
-	bool operator==(const Node<X>& rhs) const;
+	bool operator==(const Node<O>& rhs) const;
 };
 
 template <typename O>
@@ -24,7 +23,6 @@ inline Node<O>::Node() : serialNumber(count++) {
 }
 
 template<typename O>
-template<typename X>
-inline bool Node<O>::operator==(const Node<X>& rhs) const {
+inline bool Node<O>::operator==(const Node<O>& rhs) const {
 	return serialNumber == rhs.serialNumber;
 }
