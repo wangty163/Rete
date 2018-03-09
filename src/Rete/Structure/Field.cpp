@@ -2,17 +2,17 @@
 
 #include "../../PublicDefine.h"
 
-char Field::prefixChar = '$';
+std::string Field::paramPrefix = "$";
 
 std::string Field::getParamString(const std::string & prefix, size_t paramCount) {
-	return prefixChar + prefix + CStringOp::ToString(paramCount);
+	return paramPrefix + prefix + CStringOp::ToString(paramCount);
 }
 
 std::string Field::getParamName(const std::string & str) {
-	myAssert(!str.empty() && str.front() == prefixChar);
-	return str.substr(1);
+	myAssert(isParam(str));
+	return str.substr(paramPrefix.length());
 }
 
 bool Field::isParam(const std::string & str) {
-	return !str.empty() && str.front() == prefixChar;
+	return CStringOp::startsWith(str, paramPrefix);
 }

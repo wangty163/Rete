@@ -12,7 +12,7 @@ namespace Field
 		value,
 		undefined,
 	};
-	extern char prefixChar;
+	extern std::string paramPrefix;
 
 	template<typename T>
 	std::string getParamString(const T& paramName);
@@ -24,5 +24,5 @@ namespace Field
 
 template<typename T>
 inline std::string Field::getParamString(const T & paramName) {
-	return prefixChar + CStringOp::ToString(paramName);
+	return paramPrefix + CStringOp::ToString(paramName);
 }
