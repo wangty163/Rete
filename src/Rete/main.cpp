@@ -5,29 +5,47 @@
 #include "../Log.h"
 #include "../StringOp.h"
 #include "Utils/VectorPrinter.h"
-#include "../COOVRecognitionByPattern.h"
 #include "../PublicDefine.h"
 
 void test() {
-	CLog::write("Init", "start");
-	COOVRecognitionByPattern::Init();
-	CLog::write("Init", "end");
+	Net net;
+	net.addProduction({
+		// production
+		{ "$x", ".color", "red" },
+	}, {
+		// display when match
+		{ "rule 1", "", ""},
+		{ "$x", "color", "red" },
+	});
+	net.addProduction({
+		// production
+		{ "$x", ".on", "$y" },
+		{ "$y", ".left-of", "$z" },
+		{ "$z", ".color", "red" },
+	}, {
+		// display when match
+		{ "rule 2", "", ""},
+		{ "$x", "on", "$y" },
+		{ "$y", "left-of", "$z" },
+		{ "$z", "color", "red" },
+	});
 
-	CLog::write("Recog", "start");
-	COOVRecognitionByPattern rc;
-	std::vector<MatchResultNode> result;
-	std::vector<std::string> words = {
-		"几", "个", "月", "不", "冲", "值", "，", "是否", "要", "去掉", "那", "几", "个", "没",
-		"冲", "的", "月", "租", "？"
-	}, poses = {
-		"m", "q", "n", "d", "v", "n", "w", "v", "v", "v", "r", "m", "q", "d", "v", "uj", "n", "ng", "w"
-	};
-	for (size_t i = 0; i < 100; ++i) {
-		rc.RecognitionByOOVPattern(result, words, poses);
-	}
-	CLog::write("Recog", "end");
-	for (auto&& nd : result) {
-		debugIII(nd.nBegin, nd.nEnd, nd.matchedPattern);
+	net.addWME({ "B1", ".on", "B2" });
+	net.addWME({ "B1", ".on", "B3" });
+	net.addWME({ "B1", ".color", "red" });
+	net.addWME({ "B2", ".on", "table" });
+	net.addWME({ "B2", ".left-of", "B3" });
+	net.addWME({ "B2", ".color", "blue" });
+	net.addWME({ "B3", ".left-of", "B4" });
+	net.addWME({ "B3", ".on", "table" });
+	net.addWME({ "B3", ".color", "red" });
+
+	;
+	for (auto&& condVec : net.invoke()) {
+		for (auto&& cond : condVec) {
+			cond.print(0);
+		}
+		puts("");
 	}
 	system("pause");
 }
